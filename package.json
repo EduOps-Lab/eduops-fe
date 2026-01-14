@@ -2,6 +2,7 @@
   "name": "eduops-fe",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.28.0",
   "engines": {
     "node": ">=20"
   },
@@ -9,7 +10,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings=0",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

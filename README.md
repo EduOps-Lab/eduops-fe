@@ -4,15 +4,15 @@
 
 ### 필수 요구사항
 
-- Node.js 20 이상
-- npm, yarn, pnpm, 또는 bun
+- Node.js 20.9.0
+- pnpm
 
 ### 설치 방법
 
 1. 저장소를 클론하고 의존성을 설치합니다:
 
 ```bash
-npm install
+pnpm install
 ```
 
 2. 환경 변수를 설정합니다:
@@ -26,19 +26,13 @@ cp .env.example .env.local
 3. Git hooks를 초기화합니다:
 
 ```bash
-npm run prepare
+pnpm run prepare
 ```
 
 4. 개발 서버를 실행합니다:
 
 ```bash
-npm run dev
-# 또는
-yarn dev
-# 또는
 pnpm dev
-# 또는
-bun dev
 ```
 
 브라우저에서 [http://localhost:3000](http://localhost:3000)을 열어 결과를 확인하세요.
@@ -56,15 +50,15 @@ bun dev
 
 ## 사용 가능한 스크립트
 
-- `npm run dev` - 개발 서버 실행
-- `npm run build` - 프로덕션 빌드
-- `npm run start` - 프로덕션 서버 실행
-- `npm run lint` - ESLint 실행
-- `npm run lint:fix` - ESLint 오류 자동 수정
-- `npm run format` - Prettier로 코드 포맷팅
-- `npm run format:check` - 코드 포맷 검사
-- `npm run type-check` - TypeScript 타입 검사
-- `npm test` - Jest 테스트 실행
+- `pnpm run dev` - 개발 서버 실행
+- `pnpm run build` - 프로덕션 빌드
+- `pnpm run start` - 프로덕션 서버 실행
+- `pnpm run lint` - ESLint 실행
+- `pnpm run lint:fix` - ESLint 오류 자동 수정
+- `pnpm run format` - Prettier로 코드 포맷팅
+- `pnpm run format:check` - 코드 포맷 검사
+- `pnpm run type-check` - TypeScript 타입 검사
+- `pnpm test` - Jest 테스트 실행
 
 ## 코드 품질
 
@@ -73,7 +67,7 @@ bun dev
 ### Husky (Git Hooks)
 
 이 프로젝트는 Husky를 사용해 Git 커밋 훅을 관리합니다.
-의존성 설치 후 `npm run prepare` 스크립트를 통해 Husky 훅이 설정됩니다.
+의존성 설치 후 `pnpm run prepare` 스크립트를 통해 Husky 훅이 설정됩니다.
 
 - 커밋 시 커밋 메시지 규칙을 검사합니다 (commitlint)
 - 훅 설정은 `.husky/` 디렉토리에 위치합니다
@@ -89,8 +83,8 @@ VS Code를 사용하는 경우, 프로젝트에는 다음을 제공하는 권장
 ### 수동 포맷팅
 
 ```bash
-npm run format        # 모든 파일 포맷팅
-npm run lint:fix      # 린트 오류 수정
+pnpm run format        # 모든 파일 포맷팅
+pnpm run lint:fix      # 린트 오류 수정
 ```
 
 ## Git 워크플로우
@@ -163,7 +157,7 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:4000
 
 ## CI/CD
 
-이 프로젝트는 지속적 통합을 위해 GitHub Actions를 사용합니다. `main` 또는 `develop` 브랜치에 푸시하거나 Pull Request를 열 때마다 다음 검사가 자동으로 실행됩니다:
+이 프로젝트는 지속적 통합을 위해 GitHub Actions를 사용합니다. `main` 또는 `dev` 브랜치에 푸시하거나 Pull Request를 열 때마다 다음 검사가 자동으로 실행됩니다:
 
 - ESLint 검사
 - Prettier 포맷 검증
