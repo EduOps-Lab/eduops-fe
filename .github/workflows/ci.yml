@@ -18,6 +18,12 @@ jobs:
       # 소스 코드 체크아웃 (저장소 코드 가져오기)
       - uses: actions/checkout@v4
 
+      # pnpm 설정 (setup-node 캐시가 pnpm을 찾을 수 있도록 선행)
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.0
+
       # Node.js 설정 (프로젝트에 지정된 버전 사용 및 pnpm 캐시 활성화)
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -52,6 +58,12 @@ jobs:
     steps:
       # 소스 코드 체크아웃 (저장소 코드 가져오기)
       - uses: actions/checkout@v4
+
+      # pnpm 설정 (setup-node 캐시가 pnpm을 찾을 수 있도록 선행)
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.0
 
       # Node.js 설정 (프로젝트에 지정된 버전 사용 및 pnpm 캐시 활성화)
       - name: Setup Node.js
