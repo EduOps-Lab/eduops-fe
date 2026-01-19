@@ -1,15 +1,19 @@
 ---
 name: "FE - 디자인 적용 및 API 연동 (Phase 2)"
 about: 디자이너 시안 반영 및 실제 데이터 엔드포인트 연결
-title: "[FE] [Phase 2] [ID] "
-labels: ["feature", "phase:ui-api"]
+title: "[FE] [Phase 2] [Task ID: ] "
+labels: ["feature", "FE"]
 assignees: ""
 ---
 
 ## ✨ 작업 설명
 
-- **ID:** (예: B0, C1)
+- **작업 코드(Task ID):** (예: B01, USER_LOGIN_01)
 - **Phase 1 이슈:** #이전이슈번호
+
+## 1. 개요 (Description)
+
+- 어떤 기능을 구현하나요?
 
 ## 🧱 작업 범위 (체크리스트)
 
