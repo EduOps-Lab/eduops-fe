@@ -7,29 +7,24 @@ import Link from "next/link";
 
 import { loginSchema } from "@/validation/auth.validation";
 import { LoginFormData, EducatorRole, LearnerRole } from "@/types/auth.type";
+import { LOGIN_FORM_DEFAULTS } from "@/constants/auth.defaults";
 
-type LoginFormProps<R> = {
-  selectedRole: R; // EducatorRole | LearnerRole
+type LoginFormProps = {
+  selectedRole: EducatorRole | LearnerRole;
 };
 
-export default function LoginForm<R extends EducatorRole | LearnerRole>({
-  selectedRole,
-}: LoginFormProps<R>) {
+export default function LoginForm({ selectedRole }: LoginFormProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     mode: "onChange",
     reValidateMode: "onChange",
-    defaultValues: {
-      email: "",
-      password: "",
-      keepLoggedIn: false,
-    },
+    defaultValues: LOGIN_FORM_DEFAULTS,
   });
 
   const onSubmit = (data: LoginFormData) => {
@@ -122,8 +117,14 @@ export default function LoginForm<R extends EducatorRole | LearnerRole>({
         {/* 로그인 버튼 */}
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors cursor-pointer"
+          disabled={!isValid}
+          className={`w-full py-3 px-4 rounded-lg font-medium transition-colors ${
+            !isValid
+              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+              : "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
+          }`}
           aria-label="로그인"
+          aria-disabled={!isValid}
         >
           로그인
         </button>
