@@ -8,16 +8,10 @@ import Link from "next/link";
 import { useMutation } from "@tanstack/react-query";
 
 import { registerSchema } from "@/validation/auth.validation";
-import { RegisterFormData } from "@/types/auth.type";
+import { RegisterFormData, RegisterUser } from "@/types/auth.type";
 import { useAuthStore } from "@/stores/auth.store";
 import { REGISTER_FORM_DEFAULTS } from "@/constants/auth.defaults";
-
-// mock API 함수
-const verifyPhoneAPI = async (phone: string) => {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  if (phone === "010-1234-5678") return { success: true };
-  return { success: false };
-};
+import { registerAPI, verifyPhoneAPI } from "@/services/auth.service";
 
 type RegisterFormProps = {
   requireAuthCode?: boolean; // 인증 코드 필요 여부 - 조교
@@ -31,8 +25,13 @@ export default function RegisterForm({
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
-  const { isPhoneVerified, isCodeVerified, setPhoneVerified, resetAuth } =
-    useAuthStore();
+  const {
+    isPhoneVerified,
+    isCodeVerified,
+    authenticationCode,
+    setPhoneVerified,
+    resetAuth,
+  } = useAuthStore();
 
   const {
     register,
@@ -66,14 +65,36 @@ export default function RegisterForm({
     },
   });
 
+  // 전화번호 인증 버튼 클릭 시 실행
   const handleVerifyPhone = async () => {
     const isValidPhone = await trigger("phone");
     if (!isValidPhone) return;
+
     console.log("연락처 인증");
 
     const phoneValue = getValues("phone");
     phoneMutation.mutate(phoneValue);
   };
+
+  // 회원가입 mutation
+  const registerMutation = useMutation({
+    mutationFn: (formData: RegisterUser) => registerAPI(formData),
+    onSuccess: (data) => {
+      if (data.success) {
+        alert("회원가입 완료!");
+        resetAuth(); // 인증 상태 초기화 -> 다음 회원가입에 문제 없도록
+
+        // TODO:상황에 따른 educator/learner 로그인 페이지 구분 수정 필요
+        router.push("/educators/instructor/login");
+      } else {
+        alert(data.message || "회원가입 실패");
+      }
+    },
+    onError: (err) => {
+      console.error(err);
+      alert("서버 오류 발생");
+    },
+  });
 
   // 회원가입 제출
   const onSubmit = (data: RegisterFormData) => {
@@ -93,11 +114,16 @@ export default function RegisterForm({
       return;
     }
 
-    console.log("회원가입 데이터:", data);
+    console.log("회원가입 요청");
 
-    // TODO: 회원가입 API
-    resetAuth();
-    router.push("/educators/instructor/login");
+    // authenticationCode를 포함시키기
+    const submitData: RegisterUser = {
+      ...data,
+      ...(authenticationCode ? { authenticationCode } : {}),
+    };
+
+    // mutation 호출
+    registerMutation.mutate(submitData);
   };
 
   return (

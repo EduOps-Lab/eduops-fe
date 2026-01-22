@@ -2,18 +2,21 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
 
 import { authCodeSchema } from "@/validation/auth.validation";
 import { useAuthStore } from "@/stores/auth.store";
 import { AuthCodeFormData } from "@/types/auth.type";
 import { AUTH_CODE_FORM_DEFAULTS } from "@/constants/auth.defaults";
+import { verifyAuthCodeAPI } from "@/services/auth.service";
 
 export default function AuthenticationCode() {
   const {
     isCodeVerified,
     isVerifyingCode,
     setAuthCode,
-    startCodeVerification,
+    setVerifyingCode,
+    setCodeVerified,
   } = useAuthStore();
 
   const {
@@ -28,6 +31,25 @@ export default function AuthenticationCode() {
     defaultValues: AUTH_CODE_FORM_DEFAULTS,
   });
 
+  const mutation = useMutation({
+    mutationFn: (code: string) => verifyAuthCodeAPI(code),
+    onMutate: () => setVerifyingCode(true), // 요청 시작 시 상태
+    onSuccess: (data) => {
+      if (data.success) {
+        setCodeVerified(true);
+      } else {
+        setCodeVerified(false);
+        alert("인증 코드가 올바르지 않습니다.");
+      }
+    },
+    onError: (err) => {
+      console.error(err);
+      setCodeVerified(false);
+      alert("서버 인증 중 오류가 발생했습니다.");
+    },
+    onSettled: () => setVerifyingCode(false), // 요청 완료 후 상태
+  });
+
   const handleVerifyCode = async () => {
     const isValid = await trigger("authenticationCode");
     if (!isValid) return;
@@ -38,8 +60,8 @@ export default function AuthenticationCode() {
     // 1. 인증 코드 저장
     setAuthCode(codeValue);
 
-    // 2. 서버 검증 시작
-    startCodeVerification();
+    // 2. 서버 요청
+    mutation.mutate(codeValue);
   };
 
   return (
