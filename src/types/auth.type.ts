@@ -28,9 +28,17 @@ export type LearnerUser = LoginUser<LearnerRole>;
 
 // store 인증 상태 타입
 export type AuthStore = {
-  isPhoneVerified: boolean; // 전화번호 인증 완료 여부
-  isCodeVerified: boolean; // 인증 코드 인증 완료 여부
+  // 전화번호 인증
+  isPhoneVerified: boolean;
+
+  // 인증 코드
+  authenticationCode: string; // 입력값
+  isVerifyingCode: boolean; // 서버 검증 중
+  isCodeVerified: boolean; // 검증 완료 여부
+
   setPhoneVerified: (verified: boolean) => void;
-  setCodeVerified: (verified: boolean) => void;
+  setAuthCode: (code: string) => void;
+  startCodeVerification: () => void;
+
   resetAuth: () => void;
 };

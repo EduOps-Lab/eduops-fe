@@ -9,7 +9,12 @@ import { AuthCodeFormData } from "@/types/auth.type";
 import { AUTH_CODE_FORM_DEFAULTS } from "@/constants/auth.defaults";
 
 export default function AuthenticationCode() {
-  const { isCodeVerified, setCodeVerified } = useAuthStore();
+  const {
+    isCodeVerified,
+    isVerifyingCode,
+    setAuthCode,
+    startCodeVerification,
+  } = useAuthStore();
 
   const {
     register,
@@ -29,7 +34,12 @@ export default function AuthenticationCode() {
 
     const codeValue = getValues("authenticationCode");
     console.log("인증코드 확인:", codeValue);
-    setCodeVerified(true);
+
+    // 1. 인증 코드 저장
+    setAuthCode(codeValue);
+
+    // 2. 서버 검증 시작
+    startCodeVerification();
   };
 
   return (
@@ -48,8 +58,8 @@ export default function AuthenticationCode() {
             type="text"
             {...register("authenticationCode")}
             className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-            disabled={isCodeVerified}
-            placeholder="강사가 발행한 6자리 코드 입력"
+            disabled={isVerifyingCode || isCodeVerified}
+            placeholder="6자리 코드 입력"
             aria-invalid={errors.authenticationCode ? "true" : "false"}
             aria-describedby={
               errors.authenticationCode ? "code-error" : undefined
@@ -59,15 +69,22 @@ export default function AuthenticationCode() {
           <button
             type="button"
             onClick={handleVerifyCode}
-            disabled={isCodeVerified}
-            className={`px-4 py-3 rounded-lg font-medium whitespace-nowrap transition-colors ${
-              isCodeVerified
-                ? "bg-gray-600 text-white cursor-not-allowed"
-                : "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
-            }`}
-            aria-label={isCodeVerified ? "인증 완료" : "코드 확인"}
+            disabled={isVerifyingCode || isCodeVerified}
+            className={`px-4 py-3 rounded-lg font-medium whitespace-nowrap transition-colors
+              ${isVerifyingCode ? "bg-gray-400 cursor-wait" : ""} ${isCodeVerified ? "bg-gray-600 text-white cursor-not-allowed" : "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"}`}
+            aria-label={
+              isVerifyingCode
+                ? "인증 중..."
+                : isCodeVerified
+                  ? "인증 완료"
+                  : "인증하기"
+            }
           >
-            {isCodeVerified ? "인증 완료" : "코드 확인"}
+            {isVerifyingCode
+              ? "인증 중..."
+              : isCodeVerified
+                ? "인증 완료"
+                : "인증하기"}
           </button>
         </div>
 
