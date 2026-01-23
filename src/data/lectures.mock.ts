@@ -1,0 +1,88 @@
+import { Lecture } from "@/types/lectures";
+
+export const mockLectures: Lecture[] = [
+  {
+    id: "1",
+    name: "고2 수학 A반",
+    subject: "수학",
+    category: "어학원",
+    grade: "고2",
+    instructor: "배지원",
+    currentStudents: 22,
+    maxStudents: 24,
+    schedule: {
+      days: ["월", "목"],
+      time: "18:00 - 20:00",
+    },
+  },
+  {
+    id: "2",
+    name: "고3 파이널 대비반",
+    subject: "파이널",
+    category: "입시",
+    grade: "고3",
+    instructor: "조민하",
+    currentStudents: 30,
+    maxStudents: 30,
+    schedule: {
+      days: ["월", "수", "금"],
+      time: "20:00 - 22:30",
+    },
+  },
+  {
+    id: "3",
+    name: "고1 수학 B반",
+    subject: "수학",
+    category: "학교",
+    grade: "고1",
+    instructor: "임현진",
+    currentStudents: 19,
+    maxStudents: 26,
+    schedule: {
+      days: ["토"],
+      time: "10:00 - 13:00",
+    },
+  },
+  {
+    id: "4",
+    name: "고1 영어 A반",
+    subject: "영어",
+    category: "어학원",
+    grade: "고1",
+    instructor: "박하은",
+    currentStudents: 5,
+    maxStudents: 20,
+    schedule: {
+      days: ["월", "수"],
+      time: "17:00 - 19:00",
+    },
+  },
+  {
+    id: "5",
+    name: "중3 과학 심화반",
+    subject: "과학",
+    category: "학교",
+    grade: "중3",
+    instructor: "김서준",
+    currentStudents: 15,
+    maxStudents: 20,
+    schedule: {
+      days: ["화", "목"],
+      time: "19:00 - 21:00",
+    },
+  },
+  {
+    id: "6",
+    name: "고2 국어 독해반",
+    subject: "국어",
+    category: "학교",
+    grade: "고2",
+    instructor: "이지은",
+    currentStudents: 18,
+    maxStudents: 25,
+    schedule: {
+      days: ["수", "금"],
+      time: "16:00 - 18:00",
+    },
+  },
+];
