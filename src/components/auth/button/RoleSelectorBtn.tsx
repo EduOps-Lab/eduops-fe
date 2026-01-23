@@ -2,15 +2,15 @@
 
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
-import type { UserRole, RoleOption } from "@/types/auth.type";
+import type { Role, RoleOption } from "@/types/auth.type";
 
-type RoleSelectorBtnProps<T extends UserRole> = {
+type RoleSelectorBtnProps<T extends Role> = {
   options: RoleOption<T>[];
   value: T;
   onChange: (role: T) => void;
 };
 
-export default function RoleSelectorBtn<T extends UserRole>({
+export default function RoleSelectorBtn<T extends Role>({
   options,
   value,
   onChange,

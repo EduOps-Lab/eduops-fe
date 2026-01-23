@@ -54,14 +54,13 @@ export default function AuthenticationCode() {
     const isValid = await trigger("authenticationCode");
     if (!isValid) return;
 
-    const codeValue = getValues("authenticationCode");
-    console.log("인증코드 확인:", codeValue);
+    const authenticationCode = getValues("authenticationCode");
+    console.log("인증코드 확인:", authenticationCode);
 
-    // 1. 인증 코드 저장
-    setAuthCode(codeValue);
+    // 인증 코드 저장
+    setAuthCode(authenticationCode);
 
-    // 2. 서버 요청
-    mutation.mutate(codeValue);
+    mutation.mutate(authenticationCode);
   };
 
   return (

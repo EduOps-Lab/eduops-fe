@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { AuthStore } from "@/types/auth.type";
+import { AuthStore, SchoolInfoStore } from "@/types/auth.type";
 
 export const useAuthStore = create<AuthStore>((set) => ({
   isPhoneVerified: false, // 전화번호 인증 완료 여부
@@ -19,5 +19,20 @@ export const useAuthStore = create<AuthStore>((set) => ({
       authenticationCode: "",
       isVerifyingCode: false,
       isCodeVerified: false,
+    }),
+}));
+
+export const useSchoolStore = create<SchoolInfoStore>((set) => ({
+  schoolName: "", // 학교명
+  grade: "", // 학년
+  isSchoolInfoValid: false, // 학교 정보 검증 완료 여부
+
+  setSchoolInfo: (data) => set(data),
+  setSchoolInfoValid: (valid) => set({ isSchoolInfoValid: valid }),
+  resetSchoolInfo: () =>
+    set({
+      schoolName: "",
+      grade: "",
+      isSchoolInfoValid: false,
     }),
 }));

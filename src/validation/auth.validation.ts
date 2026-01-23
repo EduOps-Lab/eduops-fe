@@ -50,3 +50,8 @@ export const authCodeSchema = z.object({
     .min(1, "인증 코드를 입력해주세요")
     .length(6, "인증 코드는 6자리여야 합니다"),
 });
+
+export const schoolInfoSchema = z.object({
+  schoolName: z.string().min(1, "학교명을 입력해주세요"),
+  grade: z.string().min(1, "학년을 선택해주세요"),
+});

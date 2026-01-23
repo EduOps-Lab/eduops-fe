@@ -2,24 +2,29 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useMutation } from "@tanstack/react-query";
 
 import { registerSchema } from "@/validation/auth.validation";
-import { RegisterFormData, RegisterUser } from "@/types/auth.type";
-import { useAuthStore } from "@/stores/auth.store";
+import { RegisterFormData, RegisterUser, Role } from "@/types/auth.type";
+import { useAuthStore, useSchoolStore } from "@/stores/auth.store";
 import { REGISTER_FORM_DEFAULTS } from "@/constants/auth.defaults";
 import { registerAPI, verifyPhoneAPI } from "@/services/auth.service";
 
 type RegisterFormProps = {
   requireAuthCode?: boolean; // 인증 코드 필요 여부 - 조교
   requireSchoolInfo?: boolean; // 학원 정보 필요 여부 - 학생
+  userType: "educators" | "learners"; // 사용자 타입 (라우팅용: educators, learners)
+  role: Role;
 };
 
 export default function RegisterForm({
   requireAuthCode = false,
+  requireSchoolInfo = false,
+  userType,
+  role,
 }: RegisterFormProps) {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
@@ -32,6 +37,9 @@ export default function RegisterForm({
     setPhoneVerified,
     resetAuth,
   } = useAuthStore();
+
+  const { schoolName, grade, isSchoolInfoValid, resetSchoolInfo } =
+    useSchoolStore();
 
   const {
     register,
@@ -47,6 +55,12 @@ export default function RegisterForm({
     reValidateMode: "onChange",
     defaultValues: REGISTER_FORM_DEFAULTS,
   });
+
+  // 뒤로가기 시 인증 상태 초기화
+  useEffect(() => {
+    resetAuth();
+    resetSchoolInfo();
+  }, [resetAuth, resetSchoolInfo]);
 
   // 전화번호 인증 mutation
   const phoneMutation = useMutation({
@@ -82,10 +96,13 @@ export default function RegisterForm({
     onSuccess: (data) => {
       if (data.success) {
         alert("회원가입 완료!");
-        resetAuth(); // 인증 상태 초기화 -> 다음 회원가입에 문제 없도록
+        resetAuth(); // 인증 상태 초기화
+        resetSchoolInfo(); // 학교 정보 초기화
 
-        // TODO:상황에 따른 educator/learner 로그인 페이지 구분 수정 필요
-        router.push("/educators/instructor/login");
+        // userType에 따라 로그인 페이지 분기
+        const loginPath =
+          userType === "educators" ? "/educators/login" : "/learners/login";
+        router.push(loginPath);
       } else {
         alert(data.message || "회원가입 실패");
       }
@@ -98,6 +115,7 @@ export default function RegisterForm({
 
   // 회원가입 제출
   const onSubmit = (data: RegisterFormData) => {
+    // 전화번호 인증 확인 - RHF이 관리
     if (!isPhoneVerified) {
       setError("phone", {
         type: "manual",
@@ -106,11 +124,15 @@ export default function RegisterForm({
       return;
     }
 
+    // 인증 코드 검증 - 외부 폼
     if (requireAuthCode && !isCodeVerified) {
-      setError("email", {
-        type: "manual",
-        message: "인증 코드 확인을 완료해주세요",
-      });
+      alert("인증 코드를 확인해주세요.");
+      return;
+    }
+
+    // 학교 정보 검증 - 외부 폼
+    if (requireSchoolInfo && !isSchoolInfoValid) {
+      alert("학교 정보를 모두 입력해주세요.");
       return;
     }
 
@@ -120,11 +142,19 @@ export default function RegisterForm({
     const submitData: RegisterUser = {
       ...data,
       ...(authenticationCode ? { authenticationCode } : {}),
+      ...(requireSchoolInfo ? { schoolName, grade } : {}),
+      role,
     };
 
     // mutation 호출
     registerMutation.mutate(submitData);
   };
+
+  const isSubmitDisabled =
+    !isValid ||
+    !isPhoneVerified ||
+    (requireAuthCode && !isCodeVerified) ||
+    (requireSchoolInfo && !isSchoolInfoValid);
 
   return (
     <div className="space-y-6">
@@ -345,11 +375,9 @@ export default function RegisterForm({
         {/* 회원가입 완료 버튼 */}
         <button
           type="submit"
-          disabled={
-            !isValid || !isPhoneVerified || (requireAuthCode && !isCodeVerified)
-          }
+          disabled={isSubmitDisabled}
           className={`w-full py-3 px-4 rounded-lg font-medium transition-colors ${
-            !isValid || !isPhoneVerified || (requireAuthCode && !isCodeVerified)
+            isSubmitDisabled
               ? "bg-gray-300 text-gray-500 cursor-not-allowed"
               : "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
           }`}
@@ -362,7 +390,9 @@ export default function RegisterForm({
       <div className="text-center space-y-3">
         <p className="text-sm text-gray-600">이미 계정이 있으신가요?</p>
         <Link
-          href={`/educators/instructor/login`}
+          href={
+            userType === "educators" ? "/educators/login" : "/learners/login"
+          }
           className="text-blue-600 hover:text-blue-700 font-medium"
         >
           로그인하기
