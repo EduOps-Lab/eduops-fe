@@ -4,13 +4,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import Link from "next/link";
+import { useMutation } from "@tanstack/react-query";
 
 import { loginSchema } from "@/validation/auth.validation";
-import { LoginFormData, EducatorRole, LearnerRole } from "@/types/auth.type";
+import { LoginFormData, LoginUser, UserRole } from "@/types/auth.type";
 import { LOGIN_FORM_DEFAULTS } from "@/constants/auth.defaults";
+import { loginAPI } from "@/services/auth.service";
 
 type LoginFormProps = {
-  selectedRole: EducatorRole | LearnerRole;
+  selectedRole: UserRole;
 };
 
 export default function LoginForm({ selectedRole }: LoginFormProps) {
@@ -27,13 +29,33 @@ export default function LoginForm({ selectedRole }: LoginFormProps) {
     defaultValues: LOGIN_FORM_DEFAULTS,
   });
 
+  // 로그인 mutation
+  const loginMutation = useMutation({
+    mutationFn: (formData: LoginUser) => loginAPI(formData),
+    onSuccess: (data) => {
+      if (data.success) {
+        alert("로그인 성공!");
+
+        // TODO: 로그인 성공 후 라우팅
+        // router.push("/(dashboard)/educators");
+      } else {
+        alert(data.message || "로그인 실패");
+      }
+    },
+    onError: (err) => {
+      console.error(err);
+      alert("서버 오류 발생");
+    },
+  });
+
+  // 로그인 버튼 - role 데이터 포함
   const onSubmit = (data: LoginFormData) => {
-    console.log("로그인 데이터:", { ...data, role: selectedRole });
-    // TODO: 로그인 API
+    loginMutation.mutate({ ...data, role: selectedRole });
   };
 
+  // 구글 로그인
   const handleGoogleLogin = () => {
-    console.log("구글 로그인");
+    console.log("구글 로그인 요청");
     // TODO: 구글 OAuth
   };
 

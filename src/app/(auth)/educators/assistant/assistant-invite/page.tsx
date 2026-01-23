@@ -1,5 +1,5 @@
-import AuthenticationCode from "@/components/auth/AuthenticationCodeForm";
-import RegisterForm from "@/components/auth/RegisterForm";
+import AuthenticationCode from "@/components/form/AuthenticationCodeForm";
+import RegisterForm from "@/components/form/RegisterForm";
 import AuthLayout from "@/components/layout/AuthLayout";
 
 export default function AssistantInvitePage() {
