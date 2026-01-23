@@ -9,7 +9,11 @@ export default function AssistantRegisterPage() {
       description="회원가입을 위해 필수 정보를 입력해주세요."
     >
       <AuthenticationCode />
-      <RegisterForm requireAuthCode={true} />
+      <RegisterForm
+        requireAuthCode={true}
+        userType="educators"
+        role="assistant"
+      />
     </AuthLayout>
   );
 }

@@ -7,12 +7,12 @@ import Link from "next/link";
 import { useMutation } from "@tanstack/react-query";
 
 import { loginSchema } from "@/validation/auth.validation";
-import { LoginFormData, LoginUser, UserRole } from "@/types/auth.type";
+import { LoginFormData, LoginUser, Role } from "@/types/auth.type";
 import { LOGIN_FORM_DEFAULTS } from "@/constants/auth.defaults";
 import { loginAPI } from "@/services/auth.service";
 
 type LoginFormProps = {
-  selectedRole: UserRole;
+  selectedRole: Role;
 };
 
 export default function LoginForm({ selectedRole }: LoginFormProps) {
