@@ -9,7 +9,7 @@ export const mockLectures: Lecture[] = [
     category: "입시",
     grade: "고2",
     instructor: "배지원", // 동일한 강사
-    assistant: "김민준", // 담당 조교
+    assistant: "이서준", // 담당 조교
     currentStudents: 1,
     maxStudents: 30,
     startDate: "2026-01-31", // 개강일
