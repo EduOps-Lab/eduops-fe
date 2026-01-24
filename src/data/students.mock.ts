@@ -1,205 +1,239 @@
-import studentProfile from "@/assets/images/studentProfile.jpg";
+import { StudentEnrollment } from "@/types/students.type";
+import studentProfile from "@/assets/images/student-profile.jpg";
 
-export const mockStudents = [
+export const mockStudentEnrollments: StudentEnrollment[] = [
   {
-    enrollmentId: "enr-101",
+    enrollmentId: "enr-001",
+    registeredAt: "2025-03-02",
+    status: "재원",
     student: {
       id: "stu-001",
       name: "김민준",
-      profileImage: studentProfile,
-      school: "서울고고등학교",
-      grade: "고2",
       phone: "010-2345-6789",
-      email: "minjun@student.com",
-      enrollment: "재원중", // 등록 상태
-      registeredAt: "2024-03-12", // 학원 등록 일자
-      isAppUser: true, // 앱 다운로드 여부
+      school: "서울고등학교",
+      grade: "고2",
+      profileImage: studentProfile.src,
+      isAppUser: true,
     },
     parent: {
       id: "par-001",
-      name: "김민준 부모님",
-      phone: "010-9988-1122",
+      name: "김영희",
+      phone: "010-9876-5432",
       isAppUser: true,
     },
     lecture: {
       id: "lec-001",
-      title: "고2 수학 A반",
-      subject: "MATH",
-      status: "ACTIVE", // 수업 활성화 여부
+      title: "고2 수학 심화반",
+      subject: "수학",
+      isActive: true,
     },
     attendance: {
-      percentage: 96, // 출석률(%)
+      percentage: 92,
       summary: {
-        PRESENT: 24, // 출석 횟수
-        LATE: 1, // 지각 횟수
-        ABSENT: 0, // 결석 횟수
+        PRESENT: 22,
+        LATE: 1,
+        ABSENT: 1,
       },
       records: [
-        {
-          date: "2024-12-02", // 출석일
-          status: "PRESENT", // 출석 상태
-          memo: null,
-        },
-        {
-          date: "2024-12-04",
-          status: "LATE",
-          memo: "교통 체증",
-        },
+        { date: "2025-03-01", status: "PRESENT" },
+        { date: "2025-03-03", status: "LATE", memo: "지각 사유: 교통 체증" },
+        { date: "2025-03-05", status: "PRESENT" },
       ],
     },
     exams: [
       {
         id: "exam-001",
-        title: "중간고사",
-        schedule: {
-          date: "2024-11-05",
-          startTime: "14:00",
-          endTime: "15:30",
-        },
-        questions: [
-          { id: "q-001", correctAnswer: 3, studentAnswer: 3, isCorrect: true },
-          { id: "q-002", correctAnswer: 5, studentAnswer: 2, isCorrect: false },
-        ],
-        grade: {
-          totalScore: 50, // 총 점수
-          passed: false, // 합격 여부
-        },
-        clinics: [
-          {
-            id: "clinic-001",
-            reason: "중간고사 미통과",
-            status: "PENDING", // 대기 상태
-          },
-        ],
+        title: "3월 모의고사",
+        score: 88,
+        cutoffScore: 70,
+        isPass: true,
+        clinics: [],
       },
     ],
-    extraInfo: {
-      memo: "수학 경시 대비 학생",
-      consultationRecords: [
-        "2024-09-10: 학습 진도 상담",
-        "2024-11-05: 심화반 추천",
-      ], // 상담 기록
-    },
   },
+
   {
-    enrollmentId: "enr-102",
+    enrollmentId: "enr-002",
+    registeredAt: "2025-02-10",
+    status: "재원",
     student: {
-      id: "stu-002",
-      name: "박서연",
-      profileImage: studentProfile,
-      school: "야당 고등등학교",
-      grade: "고3",
-      phone: "010-3456-7890",
-      email: "seoyeon@student.com",
-      enrollment: "재원중",
-      registeredAt: "2024-02-20",
-      isAppUser: true,
+      id: null,
+      name: "이서연",
+      phone: "010-5555-1111",
+      school: "중앙여중",
+      grade: "중3",
+      isAppUser: false,
+      profileImage: studentProfile.src,
     },
     parent: {
       id: "par-002",
-      name: "박서연 부모님",
-      phone: "010-8877-3344",
-      isAppUser: false,
+      name: "이정호",
+      phone: "010-2222-3333",
+      isAppUser: true,
     },
     lecture: {
       id: "lec-002",
-      title: "고3 파이널 대비반",
-      subject: "ENG",
-      status: "ACTIVE",
+      title: "중3 영어 내신 대비",
+      subject: "영어",
+      isActive: true,
     },
     attendance: {
-      percentage: 88,
-      summary: { PRESENT: 22, LATE: 3, ABSENT: 1 },
+      percentage: 80,
+      summary: {
+        PRESENT: 16,
+        LATE: 2,
+        ABSENT: 2,
+      },
       records: [
-        { date: "2024-12-01", status: "PRESENT", memo: null },
-        { date: "2024-12-03", status: "ABSENT", memo: "개인 사정" },
-        { date: "2024-12-05", status: "LATE", memo: "교통 지연" },
+        { date: "2025-02-11", status: "PRESENT" },
+        { date: "2025-02-13", status: "ABSENT", memo: "감기" },
       ],
     },
     exams: [
       {
         id: "exam-002",
-        title: "기말고사",
-        schedule: { date: "2024-12-15", startTime: "10:00", endTime: "12:00" },
-        questions: [
+        title: "중간고사 대비 테스트",
+        score: 62,
+        cutoffScore: 70,
+        isPass: false,
+        clinics: [
           {
-            id: "q-003",
-            correctAnswer: "A",
-            studentAnswer: "B",
-            isCorrect: false,
-          },
-          {
-            id: "q-004",
-            correctAnswer: "C",
-            studentAnswer: "C",
-            isCorrect: true,
+            id: "clinic-001",
+            title: "영어 보충 클리닉",
+            status: "PENDING",
+            deadline: "2025-03-20",
           },
         ],
-        grade: { totalScore: 70, passed: true },
-        clinics: [],
       },
     ],
-    extraInfo: {
-      memo: "영어 집중 수업 필요",
-      consultationRecords: ["2024-08-15: 단어 암기 상담"],
-    },
   },
+
   {
-    enrollmentId: "enr-103",
+    enrollmentId: "enr-003",
+    registeredAt: "2024-11-15",
+    status: "휴원",
     student: {
       id: "stu-003",
-      name: "최준혁",
-      profileImage: studentProfile,
-      school: "청주 고등학교",
+      name: "박지훈",
+      phone: "010-7777-8888",
+      school: "부산고등학교",
       grade: "고1",
-      phone: "010-4567-8901",
-      email: "junhyuk@student.com",
-      enrollment: "휴원",
-      registeredAt: "2023-09-01",
-      isAppUser: false,
+      isAppUser: true,
+      profileImage: studentProfile.src,
     },
     parent: {
-      id: "par-003",
-      name: "최준혁 부모님",
-      phone: "010-7766-2211",
+      id: null,
+      name: "박성민",
+      phone: "010-9999-0000",
       isAppUser: false,
     },
     lecture: {
       id: "lec-003",
-      title: "고1 영어 A반",
-      subject: "MATH",
-      status: "INACTIVE",
+      title: "고1 과학 기초",
+      subject: "과학",
+      isActive: true,
     },
     attendance: {
-      percentage: 75,
-      summary: { PRESENT: 15, LATE: 2, ABSENT: 3 },
+      percentage: 65,
+      summary: {
+        PRESENT: 13,
+        ABSENT: 7,
+      },
       records: [
-        { date: "2024-11-10", status: "PRESENT", memo: null },
-        { date: "2024-11-12", status: "ABSENT", memo: "개인 사정" },
-        { date: "2024-11-15", status: "LATE", memo: "교통 지연" },
+        { date: "2024-11-16", status: "PRESENT" },
+        { date: "2024-11-18", status: "ABSENT" },
       ],
+    },
+    exams: [],
+  },
+
+  {
+    enrollmentId: "enr-004",
+    registeredAt: "2024-08-01",
+    status: "퇴원",
+    student: {
+      id: "stu-004",
+      name: "정하은",
+      phone: "010-1212-3434",
+      school: "대전여고",
+      grade: "고3",
+      isAppUser: true,
+    },
+    parent: {
+      id: "par-004",
+      name: "정미경",
+      phone: "010-4545-6767",
+      isAppUser: true,
+    },
+    lecture: {
+      id: "lec-004",
+      title: "고3 수능 국어",
+      subject: "국어",
+      isActive: false,
+    },
+    attendance: {
+      percentage: 95,
+      summary: {
+        PRESENT: 38,
+        LATE: 1,
+      },
+      records: [],
     },
     exams: [
       {
-        id: "exam-003",
-        title: "기말 모의고사",
-        schedule: { date: "2024-12-20", startTime: "09:00", endTime: "11:30" },
-        questions: [
-          { id: "q-005", correctAnswer: 2, studentAnswer: 2, isCorrect: true },
-          { id: "q-006", correctAnswer: 4, studentAnswer: 1, isCorrect: false },
-        ],
-        grade: { totalScore: 60, passed: false },
+        id: "exam-004",
+        title: "수능 파이널 테스트",
+        score: 91,
+        cutoffScore: 80,
+        isPass: true,
         clinics: [
-          { id: "clinic-002", reason: "모의고사 미달", status: "PENDING" },
+          {
+            id: "clinic-004",
+            title: "오답 클리닉",
+            status: "COMPLETED",
+          },
         ],
       },
     ],
-    extraInfo: {
-      memo: "개인 사정으로 휴원 중",
-      consultationRecords: [
-        "2024-10-01: 휴원 상담",
-        "2024-11-01: 복학 상담 예정",
+  },
+
+  {
+    enrollmentId: "enr-005",
+    registeredAt: "2025-01-05",
+    status: "재원",
+    student: {
+      id: null,
+      name: "최윤서",
+      phone: "010-3333-6666",
+      grade: "초6",
+      isAppUser: false,
+    },
+    parent: {
+      id: null,
+      name: "최정훈",
+      phone: "010-8888-1111",
+      isAppUser: false,
+    },
+    lecture: {
+      id: "lec-005",
+      title: "초등 수학 사고력",
+      subject: "수학",
+      isActive: true,
+    },
+    attendance: {
+      percentage: 100,
+      summary: {
+        PRESENT: 12,
+      },
+      records: [
+        { date: "2025-01-06", status: "PRESENT" },
+        { date: "2025-01-08", status: "PRESENT" },
       ],
+    },
+    exams: [],
+    extraInfo: {
+      memo: "부모 요청으로 숙제량 조절",
+      consultationRecords: ["2025-01-10 학부모 상담"],
     },
   },
 ];
