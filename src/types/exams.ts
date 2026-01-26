@@ -8,7 +8,7 @@ export type Exam = {
   id: string;
   name: string; // 과제명 (예: "리포트용 영어 모의평가")
   subtitle: string; // 시험지 유형
-  type: ExamType; // 시험지 출처
+  type: ExamType; // 시험지 유형
   source: ExamSource; // 시험지 출처
   lectureName: string; // 반 이름 (예: "고2 영어 리포트반")
   registrationDate: string; // 등록일 (예: "2026. 01. 10")

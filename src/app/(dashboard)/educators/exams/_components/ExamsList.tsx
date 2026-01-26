@@ -1,6 +1,17 @@
 "use client";
 
 import { EXAMS_UI_ONLY } from "@/constants/exam.defaults";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -48,10 +59,8 @@ export function ExamsList() {
 
   const handleDeleteSelected = () => {
     if (selectedIds.length > 0) {
-      if (confirm(`${selectedIds.length}개의 시험을 삭제하시겠습니까?`)) {
-        console.log("삭제할 시험 ID:", selectedIds);
-        clearSelection();
-      }
+      console.log("삭제할 시험 ID:", selectedIds);
+      clearSelection();
     }
   };
 
@@ -89,14 +98,35 @@ export function ExamsList() {
             <SelectItem value="oldest">오래된순</SelectItem>
           </SelectContent>
         </Select>
-        <Button
-          variant="outline"
-          className="gap-2"
-          onClick={handleDeleteSelected}
-          disabled={isUiOnly || selectedIds.length === 0}
-        >
-          선택 삭제
-        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              variant="outline"
+              className="gap-2"
+              disabled={isUiOnly || selectedIds.length === 0}
+            >
+              선택 삭제
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>선택한 시험을 삭제할까요?</AlertDialogTitle>
+              <AlertDialogDescription>
+                {selectedIds.length}개의 시험이 삭제됩니다. 이 작업은 되돌릴 수
+                없습니다.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>취소</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDeleteSelected}
+                disabled={isUiOnly || selectedIds.length === 0}
+              >
+                삭제
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
 
       {/* 테이블 */}

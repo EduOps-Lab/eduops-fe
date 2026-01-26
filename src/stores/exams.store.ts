@@ -27,12 +27,14 @@ export const useExamsStore = create<ExamsStore>((set) => ({
     })),
   selectAll: (ids) =>
     set(() => ({
-      selectedIds: ids,
+      selectedIds: Array.from(new Set(ids)),
     })),
   toggleSelected: (id, checked) =>
     set((state) => ({
       selectedIds: checked
-        ? [...state.selectedIds, id]
+        ? state.selectedIds.includes(id)
+          ? state.selectedIds
+          : [...state.selectedIds, id]
         : state.selectedIds.filter((selectedId) => selectedId !== id),
     })),
   clearSelection: () =>
