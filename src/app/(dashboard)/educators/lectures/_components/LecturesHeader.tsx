@@ -29,9 +29,15 @@ export function LecturesHeader() {
 
       {/* 검색 (UI만 표시, 기능 없음) */}
       <div>
-        <label className="mb-2 block text-sm font-medium">검색</label>
+        <label
+          htmlFor="lecture-search"
+          className="mb-2 block text-sm font-medium"
+        >
+          검색
+        </label>
         <div className="relative">
           <Input
+            id="lecture-search"
             type="text"
             placeholder="수업명 / 강사 / 과목 검색"
             disabled
