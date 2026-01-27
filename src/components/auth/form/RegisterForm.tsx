@@ -152,6 +152,7 @@ export default function RegisterForm({
 
   const isSubmitDisabled =
     !isValid ||
+    registerMutation.isPending ||
     !isPhoneVerified ||
     (requireAuthCode && !isCodeVerified) ||
     (requireSchoolInfo && !isSchoolInfoValid);

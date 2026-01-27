@@ -46,13 +46,11 @@ export type AuthStore = {
 
   // 인증 코드
   authenticationCode?: string; // 입력값
-  isVerifyingCode: boolean; // 서버 검증 중
   isCodeVerified: boolean; // 서버 검증 성공 여부
 
   // 상태 업데이트 함수
   setPhoneVerified: (verified: boolean) => void;
   setAuthCode: (code: string) => void; // 인증코드 저장
-  setVerifyingCode: (verifying: boolean) => void; // 서버 검증 중 상태
   setCodeVerified: (verified: boolean) => void; // 서버 검증 성공 여부
   resetAuth: () => void;
 };

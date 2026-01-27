@@ -10,14 +10,8 @@ import { AuthCodeFormData } from "@/types/auth.type";
 import { AUTH_CODE_FORM_DEFAULTS } from "@/constants/auth.defaults";
 import { verifyAuthCodeAPI } from "@/services/auth.service";
 
-export default function AuthenticationCode() {
-  const {
-    isCodeVerified,
-    isVerifyingCode,
-    setAuthCode,
-    setVerifyingCode,
-    setCodeVerified,
-  } = useAuthStore();
+export default function AuthenticationCodeForm() {
+  const { isCodeVerified, setAuthCode, setCodeVerified } = useAuthStore();
 
   const {
     register,
@@ -33,7 +27,6 @@ export default function AuthenticationCode() {
 
   const mutation = useMutation({
     mutationFn: (code: string) => verifyAuthCodeAPI(code),
-    onMutate: () => setVerifyingCode(true), // 요청 시작 시 상태
     onSuccess: (data) => {
       if (data.success) {
         setCodeVerified(true);
@@ -49,7 +42,6 @@ export default function AuthenticationCode() {
       setAuthCode("");
       alert("서버 인증 중 오류가 발생했습니다.");
     },
-    onSettled: () => setVerifyingCode(false), // 요청 완료 후 상태
   });
 
   const handleVerifyCode = async () => {
@@ -64,6 +56,8 @@ export default function AuthenticationCode() {
 
     mutation.mutate(authenticationCode);
   };
+
+  const isLoading = mutation.isPending;
 
   return (
     <div className="space-y-4">
@@ -81,7 +75,7 @@ export default function AuthenticationCode() {
             type="text"
             {...register("authenticationCode")}
             className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-            disabled={isVerifyingCode || isCodeVerified}
+            disabled={isLoading || isCodeVerified}
             placeholder="6자리 코드 입력"
             aria-invalid={errors.authenticationCode ? "true" : "false"}
             aria-describedby={
@@ -92,18 +86,24 @@ export default function AuthenticationCode() {
           <button
             type="button"
             onClick={handleVerifyCode}
-            disabled={isVerifyingCode || isCodeVerified}
+            disabled={isLoading || isCodeVerified}
             className={`px-4 py-3 rounded-lg font-medium whitespace-nowrap transition-colors
-              ${isVerifyingCode ? "bg-gray-400 cursor-wait" : ""} ${isCodeVerified ? "bg-gray-600 text-white cursor-not-allowed" : "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"}`}
+              ${
+                isLoading
+                  ? "bg-gray-400 text-white cursor-wait"
+                  : isCodeVerified
+                    ? "bg-gray-600 text-white cursor-not-allowed"
+                    : "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
+              }`}
             aria-label={
-              isVerifyingCode
+              isLoading
                 ? "인증 중..."
                 : isCodeVerified
                   ? "인증 완료"
                   : "인증하기"
             }
           >
-            {isVerifyingCode
+            {isLoading
               ? "인증 중..."
               : isCodeVerified
                 ? "인증 완료"
