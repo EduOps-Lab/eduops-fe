@@ -28,7 +28,7 @@ export function ExamQuestionsSection({
     <Card>
       <div className="p-6 border-b flex justify-between items-center">
         <h2 className="text-xl font-semibold">문항별 정답 및 배점 설정</h2>
-        <Button onClick={onAdd} disabled={disabled}>
+        <Button type="button" onClick={onAdd} disabled={disabled}>
           문항 추가
         </Button>
       </div>
