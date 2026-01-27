@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import Title from "@/components/common/header/Title";
 
 type CreatePageHeaderProps = {
   totalQuestions: number;
@@ -20,9 +21,10 @@ export function CreatePageHeader({
 }: CreatePageHeaderProps) {
   return (
     <div className="flex justify-between items-start">
-      <div>
-        <h1 className="text-3xl font-bold">시험 등록/수정</h1>
-      </div>
+      <Title
+        title="시험 등록/수정"
+        description="시험 정보를 입력하고 문항을 구성합니다."
+      />
       <div className="flex gap-4">
         {/* 요약 카드 */}
         <Card>

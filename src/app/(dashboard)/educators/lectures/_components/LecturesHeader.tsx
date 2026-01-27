@@ -2,19 +2,17 @@
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import Title from "@/components/common/header/Title";
 
 export function LecturesHeader() {
   return (
     <div className="space-y-6">
       {/* 제목 및 버튼 */}
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">수업 목록 & 편성 현황</h1>
-          <p className="mt-2 text-muted-foreground">
-            진행 중인 클래스와 상담 및 정보를 모아 보고 대기자·출석 조치를
-            한눈에 관리하세요.
-          </p>
-        </div>
+        <Title
+          title="수업 목록 & 편성 현황"
+          description="진행 중인 클래스와 상담 및 정보를 모아 보고 대기자·출석 조치를 한눈에 관리하세요."
+        />
         <div className="flex gap-3">
           <Button variant="outline" className="gap-2">
             <span>📅</span>
