@@ -52,8 +52,8 @@ export const createStudentColumns = ({
     header: "프로필",
     cell: ({ row }) => (
       <Image
-        src={row.original.student.profileImage ?? noProfileImage.src}
-        alt={row.original.student.name}
+        src={row.original.profileImage ?? noProfileImage.src}
+        alt={row.original.name}
         width={32}
         height={32}
         className="rounded-full"
@@ -72,7 +72,7 @@ export const createStudentColumns = ({
           onNavigate(row.original.enrollmentId);
         }}
       >
-        {row.original.student.name}
+        {row.original.name}
       </span>
     ),
   }),
@@ -100,7 +100,7 @@ export const createStudentColumns = ({
     header: "앱 사용",
     cell: ({ row }) => (
       <span className="text-sm whitespace-nowrap">
-        {row.original.student.isAppUser ? "O" : "X"}
+        {row.original.isAppUser ? "O" : "X"}
       </span>
     ),
   }),
@@ -120,7 +120,7 @@ export const createStudentColumns = ({
     header: "학교 / 학년",
     cell: ({ row }) => (
       <span className="text-sm whitespace-nowrap">
-        {row.original.student.school} / {row.original.student.grade}
+        {row.original.school} / {row.original.grade}
       </span>
     ),
   }),
@@ -129,9 +129,7 @@ export const createStudentColumns = ({
     id: "phone",
     header: "연락처",
     cell: ({ row }) => (
-      <span className="text-sm whitespace-nowrap">
-        {row.original.student.phone}
-      </span>
+      <span className="text-sm whitespace-nowrap">{row.original.phone}</span>
     ),
   }),
 
