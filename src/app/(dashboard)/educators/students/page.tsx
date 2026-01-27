@@ -1,12 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
+import {
+  useReactTable,
+  getCoreRowModel,
+  flexRender,
+} from "@tanstack/react-table";
 
 import { mockLectures } from "@/data/lectures.mock";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -21,18 +26,18 @@ import SelectBtn from "@/components/common/button/SelectBtn";
 import {
   GRADE_SELECT_OPTIONS,
   STATUS_SELECT_OPTIONS,
-  STUDENTS_TABLE_COLUMNS,
 } from "@/constants/students.default";
-import { StudentTableColumns } from "@/config/StudentTableColumns";
+import { createStudentColumns } from "@/app/(dashboard)/educators/students/_components/table/StudentTableColumns";
 import { useModal } from "@/providers/ModalProvider";
 import { useStudentSelectionStore } from "@/stores/studentsList.store";
 import { fetchStudentsAPI } from "@/services/students.service";
 
-import { StudentCreateModal } from "./_components/modal/StudentCreateModal";
-import { StudentChangeModal } from "./_components/modal/ClassChangeModal";
-import { TalkNotificationModal } from "./_components/modal/TalkNotificationModal";
+import { StudentCreateModal } from "./_components/students-modal/StudentCreateModal";
+import { StudentChangeModal } from "./_components/students-modal/ClassChangeModal";
+import { TalkNotificationModal } from "./_components/students-modal/TalkNotificationModal";
 
 export default function StudentsListPage() {
+  const router = useRouter();
   const { openModal } = useModal();
 
   const { selectedStudentIds, setSelectedStudentIds, toggleStudent } =
@@ -59,18 +64,19 @@ export default function StudentsListPage() {
 
   // 체크박스 - 전체 선택
   const handleSelectAll = (checked: boolean) => {
-    setSelectedStudentIds(
-      checked
-        ? Array.from(
-            new Set([
-              ...selectedStudentIds,
-              ...students.map((s) => s.enrollmentId),
-            ])
-          )
-        : selectedStudentIds.filter(
-            (id) => !students.some((s) => s.enrollmentId === id)
-          )
-    );
+    const currentPageIds = students.map((s) => s.enrollmentId);
+
+    if (checked) {
+      // 현재 페이지의 모든 학생 ID를 기존 선택에 추가
+      setSelectedStudentIds(
+        Array.from(new Set([...selectedStudentIds, ...currentPageIds]))
+      );
+    } else {
+      // 현재 페이지의 학생 ID만 제거
+      setSelectedStudentIds(
+        selectedStudentIds.filter((id) => !currentPageIds.includes(id))
+      );
+    }
   };
 
   // 체크박스 - 개별 선택
@@ -78,7 +84,12 @@ export default function StudentsListPage() {
     toggleStudent(id);
   };
 
-  // 전체 선택 여부 (필터된 학생 기준)
+  // 상세 페이지 이동
+  const handleNavigate = (enrollmentId: string) => {
+    router.push(`/educators/students/${enrollmentId}`);
+  };
+
+  // 전체 선택 여부 계산
   const isAllSelected =
     students.length > 0 &&
     students.every((s) => selectedStudentIds.includes(s.enrollmentId));
@@ -91,38 +102,19 @@ export default function StudentsListPage() {
     }));
   };
 
-  // 학생 상태 변경(재원, 휴원, 퇴원)
-  // const handleStatusChange = (
-  //   enrollmentId: string,
-  //   status: StudentEnrollmentStatus
-  // ) => {
-  //   setStudents((prev) =>
-  //     prev.map((s) =>
-  //       s.enrollmentId === enrollmentId
-  //         ? {
-  //             ...s,
-  //             student: { ...s.student, enrollment: status },
-  //           }
-  //         : s
-  //     )
-  //   );
-  // };
-
-  const columns = StudentTableColumns({
-    selectedStudents: selectedStudentIds,
-    onSelectStudent: handleSelectStudent,
+  // Tanstack Table 인스턴스
+  const table = useReactTable({
+    data: students,
+    columns: createStudentColumns({
+      selectedStudents: selectedStudentIds,
+      onSelectStudent: handleSelectStudent,
+      onNavigate: handleNavigate,
+      isAllSelected,
+      onSelectAll: handleSelectAll,
+    }),
+    getCoreRowModel: getCoreRowModel(),
+    getRowId: (row) => row.enrollmentId,
   });
-
-  const pendingTableRow = (
-    <TableRow>
-      <TableCell
-        colSpan={STUDENTS_TABLE_COLUMNS.length + 1}
-        className="text-center py-4 text-muted-foreground"
-      >
-        로딩 중...
-      </TableCell>
-    </TableRow>
-  );
 
   if (isError) return <div>조회 실패</div>;
 
@@ -250,36 +242,64 @@ export default function StudentsListPage() {
       <div className="border rounded-lg overflow-x-auto">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead className="w-[50px]">
-                <Checkbox
-                  className="cursor-pointer"
-                  checked={isAllSelected}
-                  onCheckedChange={handleSelectAll}
-                />
-              </TableHead>
-              {STUDENTS_TABLE_COLUMNS.map((col) => (
-                <TableHead key={col.key} className="whitespace-nowrap">
-                  {col.label}
-                </TableHead>
-              ))}
-            </TableRow>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead
+                    key={header.id}
+                    className="whitespace-nowrap"
+                    style={{
+                      width:
+                        header.getSize() !== 150 ? header.getSize() : "auto",
+                    }}
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
           </TableHeader>
           <TableBody>
-            {isPending
-              ? pendingTableRow
-              : students.map((studentData) => (
-                  <TableRow key={studentData.enrollmentId}>
-                    {columns.map((col) => (
-                      <TableCell
-                        key={col.key}
-                        className="whitespace-nowrap text-sm"
-                      >
-                        {col.render(studentData)}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
+            {isPending ? (
+              <TableRow>
+                <TableCell
+                  colSpan={table.getAllColumns().length}
+                  className="text-center py-4 text-muted-foreground"
+                >
+                  로딩 중...
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={table.getAllColumns().length}
+                  className="text-center py-4 text-muted-foreground"
+                >
+                  학생이 없습니다.
+                </TableCell>
+              </TableRow>
+            ) : (
+              table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell
+                      key={cell.id}
+                      className="whitespace-nowrap text-sm"
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </div>
