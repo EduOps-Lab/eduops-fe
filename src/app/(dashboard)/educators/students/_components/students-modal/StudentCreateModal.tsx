@@ -1,6 +1,7 @@
 "use client";
 
 import { useForm, useWatch } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +22,7 @@ import {
   GRADE_SELECTING_OPTIONS,
 } from "@/constants/students.default";
 import SelectBtn from "@/components/common/button/SelectBtn";
+import { studentCreateSchema } from "@/validation/students.validation";
 
 export function StudentCreateModal() {
   const { isOpen, closeModal } = useModal();
@@ -31,8 +33,9 @@ export function StudentCreateModal() {
     setValue,
     control,
     reset,
-    formState: { isValid },
+    formState: { errors, isValid },
   } = useForm<StudentCreateFormData>({
+    resolver: zodResolver(studentCreateSchema),
     mode: "onChange",
     defaultValues: getCreateStudentFormDefaults(),
   });
@@ -74,9 +77,12 @@ export function StudentCreateModal() {
                 </Label>
                 <Input
                   id="studentName"
-                  {...register("studentName", { required: true })}
+                  {...register("name")}
                   placeholder="홍길동"
                 />
+                {errors.name && (
+                  <p className="text-xs text-red-500">{errors.name.message}</p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -85,9 +91,12 @@ export function StudentCreateModal() {
                 </Label>
                 <Input
                   id="studentPhone"
-                  {...register("studentPhone", { required: true })}
+                  {...register("phone")}
                   placeholder="010-1234-5678"
                 />
+                {errors.phone && (
+                  <p className="text-xs text-red-500">{errors.phone.message}</p>
+                )}
               </div>
             </div>
 
@@ -98,9 +107,14 @@ export function StudentCreateModal() {
                 </Label>
                 <Input
                   id="school"
-                  {...register("school", { required: true })}
+                  {...register("school")}
                   placeholder="서울고등학교"
                 />
+                {errors.school && (
+                  <p className="text-xs text-red-500">
+                    {errors.school.message}
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -128,23 +142,19 @@ export function StudentCreateModal() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="parentName">학부모 이름</Label>
-                <Input
-                  id="parentName"
-                  {...register("parentName")}
-                  placeholder="홍길동 학부모"
-                />
-              </div>
-
-              <div className="space-y-2">
                 <Label htmlFor="parentPhone">
                   학부모 연락처 <span className="text-red-500">*</span>
                 </Label>
                 <Input
                   id="parentPhone"
-                  {...register("parentPhone", { required: true })}
+                  {...register("parentPhone")}
                   placeholder="010-9876-5432"
                 />
+                {errors.parentPhone && (
+                  <p className="text-xs text-red-500">
+                    {errors.parentPhone.message}
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -172,6 +182,11 @@ export function StudentCreateModal() {
                     })
                   }
                 />
+                {errors.assignedClass && (
+                  <p className="text-xs text-red-500">
+                    {errors.assignedClass.message}
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">

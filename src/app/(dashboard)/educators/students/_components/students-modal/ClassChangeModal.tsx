@@ -39,6 +39,7 @@ export function StudentChangeModal() {
     selectedStudentIds.includes(s.enrollmentId)
   );
 
+  // 선택된 학생 초기화
   const clearSelection = useStudentSelectionStore(
     (state) => state.resetSelection
   );
@@ -52,13 +53,13 @@ export function StudentChangeModal() {
 
     // TODO: API 호출
     resetForm();
+    clearSelection();
     closeModal();
   };
 
   const resetForm = () => {
     setTargetLecture("");
     setMemo("");
-    clearSelection();
   };
 
   const handleClose = () => {
@@ -101,16 +102,14 @@ export function StudentChangeModal() {
                     className="flex items-center gap-3 p-3 border rounded-lg hover:bg-accent"
                   >
                     <div className="flex-1">
-                      <p className="text-sm font-medium">
-                        {student.student.name}
-                      </p>
+                      <p className="text-sm font-medium">{student.name}</p>
                       <p className="text-xs text-muted-foreground">
                         현재 수업: {student.lecture.title}
                       </p>
                     </div>
                     <button
                       type="button"
-                      aria-label={`학생 ${student.student.name} 삭제`}
+                      aria-label={`학생 ${student.name} 삭제`}
                       className="px-2 py-1 hover:bg-red-100 rounded"
                       onClick={() => removeStudent(student.enrollmentId)}
                     >
