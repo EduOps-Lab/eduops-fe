@@ -12,6 +12,7 @@ type SelectOption = {
 };
 
 type CommonSelectProps = {
+  id?: string;
   value: string;
   onChange?: (value: string) => void; // API 연동 후 옵셔널 제거
   placeholder: string;
@@ -20,6 +21,7 @@ type CommonSelectProps = {
 };
 
 export default function SelectBtn({
+  id,
   value,
   onChange,
   placeholder,
@@ -29,6 +31,7 @@ export default function SelectBtn({
   return (
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger
+        id={id}
         className={`${className ?? ""} gap-2 cursor-pointer`.trim()}
       >
         <SelectValue placeholder={placeholder} />
