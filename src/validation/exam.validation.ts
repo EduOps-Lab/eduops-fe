@@ -1,0 +1,55 @@
+import { z } from "zod";
+
+export const questionSchema = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("객관식"),
+    score: z.number().min(0, "배점은 0 이상이어야 합니다"),
+    category: z.string().optional(),
+    source: z.string().optional(),
+    content: z.string().optional(),
+    answer: z.object({
+      selected: z.number().min(1).max(5),
+    }),
+  }),
+  z.object({
+    type: z.literal("주관식"),
+    score: z.number().min(0, "배점은 0 이상이어야 합니다"),
+    category: z.string().optional(),
+    source: z.string().optional(),
+    content: z.string().optional(),
+    answer: z.object({
+      text: z.string().min(1, "정답을 입력해주세요"),
+    }),
+  }),
+]);
+
+export const examFormSchema = z
+  .object({
+    name: z.string().trim().min(1, "시험명을 입력해주세요"),
+    subject: z.string().trim().min(1, "과목을 선택해주세요"),
+    examType: z.string().optional(),
+    examDate: z.string().trim().min(1, "시험일을 선택해주세요"),
+    lectureId: z.string().trim().min(1, "수업을 선택해주세요"),
+    source: z.string().optional(),
+    passScore: z.number().min(0).max(100).optional(),
+    autoRetest: z.boolean(),
+    questions: z
+      .array(questionSchema)
+      .min(1, "최소 1개 이상의 문항이 필요합니다"),
+  })
+  .superRefine((data, ctx) => {
+    if (!data.questions || data.questions.length === 0) return;
+    const totalScore = data.questions.reduce(
+      (sum, question) => sum + (Number(question.score) || 0),
+      0
+    );
+    if (totalScore !== 100) {
+      ctx.addIssue({
+        code: "custom",
+        message: "총 배점은 100점이어야 합니다.",
+        path: ["questions"],
+      });
+    }
+  });
+
+export type ExamFormInput = z.infer<typeof examFormSchema>;
