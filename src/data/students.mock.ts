@@ -176,6 +176,7 @@ export const mockStudentEnrollments: StudentEnrollment[] = [
       summary: {
         PRESENT: 38,
         LATE: 1,
+        ABSENT: 1,
       },
       records: [],
     },

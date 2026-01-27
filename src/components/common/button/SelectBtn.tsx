@@ -28,7 +28,9 @@ export default function SelectBtn({
 }: CommonSelectProps) {
   return (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className={`${className} gap-2 cursor-pointer`}>
+      <SelectTrigger
+        className={`${className ?? ""} gap-2 cursor-pointer`.trim()}
+      >
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>

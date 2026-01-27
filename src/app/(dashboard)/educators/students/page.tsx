@@ -59,7 +59,18 @@ export default function StudentsListPage() {
 
   // 체크박스 - 전체 선택
   const handleSelectAll = (checked: boolean) => {
-    setSelectedStudentIds(checked ? students.map((s) => s.enrollmentId) : []);
+    setSelectedStudentIds(
+      checked
+        ? Array.from(
+            new Set([
+              ...selectedStudentIds,
+              ...students.map((s) => s.enrollmentId),
+            ])
+          )
+        : selectedStudentIds.filter(
+            (id) => !students.some((s) => s.enrollmentId === id)
+          )
+    );
   };
 
   // 체크박스 - 개별 선택
@@ -67,9 +78,10 @@ export default function StudentsListPage() {
     toggleStudent(id);
   };
 
-  // 전체 선택 여부
+  // 전체 선택 여부 (필터된 학생 기준)
   const isAllSelected =
-    students.length > 0 && selectedStudentIds.length === students.length;
+    students.length > 0 &&
+    students.every((s) => selectedStudentIds.includes(s.enrollmentId));
 
   // 수업 필터
   const handleLectureClick = (lectureId: string) => {

@@ -1,4 +1,4 @@
-export const CREATE_STUDENT_FORM_DEFAULTS = {
+export const getCreateStudentFormDefaults = () => ({
   studentName: "",
   studentPhone: "",
   school: "",
@@ -7,7 +7,7 @@ export const CREATE_STUDENT_FORM_DEFAULTS = {
   parentPhone: "",
   assignedClass: "",
   registrationDate: new Date().toISOString().split("T")[0],
-};
+});
 
 export const GRADE_SELECTING_OPTIONS = [
   { label: "고3", value: "고3" },
