@@ -121,16 +121,18 @@ export const createStudentColumns = ({
     header: "학교 / 학년",
     cell: ({ row }) => (
       <span className="text-sm whitespace-nowrap">
-        {row.original.school} / {row.original.grade}
+        {row.original.school} / {row.original.schoolYear}
       </span>
     ),
   }),
 
   columnHelper.display({
-    id: "phone",
+    id: "phoneNumber",
     header: "연락처",
     cell: ({ row }) => (
-      <span className="text-sm whitespace-nowrap">{row.original.phone}</span>
+      <span className="text-sm whitespace-nowrap">
+        {row.original.phoneNumber}
+      </span>
     ),
   }),
 

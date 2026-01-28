@@ -24,7 +24,7 @@ export type AttendanceRegisterFormData = z.infer<
 // 학생 목록 조회 쿼리 타입
 export type StudentListQuery = {
   keyword: string;
-  grade: string | null;
+  schoolYear: string | null;
   status: string | null;
   lectureId: string | null;
 };
@@ -37,10 +37,10 @@ export type StudentEnrollment = {
   id: string | null;
   name: string;
   email: string;
-  phone: string;
+  phoneNumber: string;
   parentPhone: string;
   school: string;
-  grade: string;
+  schoolYear: string;
   profileImage?: string;
   isAppUser: boolean;
   lecture: {

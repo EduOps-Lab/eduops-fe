@@ -55,9 +55,9 @@ export const ATTENDANCE_STATUS_OPTIONS = [
 export const getCreateStudentFormDefaults = (): StudentCreateFormData => {
   return {
     name: "",
-    phone: "",
+    phoneNumber: "",
     school: "",
-    grade: "",
+    schoolYear: "",
     parentPhone: "",
     assignedClass: "",
     registrationDate: getTodayYMD(),
@@ -73,8 +73,8 @@ export const CLASS_CHANGE_FORM_DEFAULTS: ClassChangeFormData = {
 export const EDIT_PROFILE_FORM_DEFAULTS: EditProfileFormData = {
   name: "",
   school: "",
-  grade: "",
-  phone: "",
+  schoolYear: "",
+  phoneNumber: "",
   email: "",
   parentPhone: "",
 };

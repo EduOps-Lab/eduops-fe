@@ -52,7 +52,7 @@ export default function LoginForm({ selectedRole }: LoginFormProps) {
 
   // 로그인 버튼 - role 데이터 포함
   const onSubmit = (data: LoginFormData) => {
-    loginMutation.mutate({ ...data, role: selectedRole });
+    loginMutation.mutate({ ...data, userType: selectedRole });
   };
 
   // 구글 로그인
@@ -128,12 +128,12 @@ export default function LoginForm({ selectedRole }: LoginFormProps) {
         {/* 로그인 상태 유지 */}
         <div className="flex items-center">
           <input
-            id="keepLoggedIn"
+            id=" rememberMe"
             type="checkbox"
-            {...register("keepLoggedIn")}
+            {...register("rememberMe")}
             className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
           />
-          <label htmlFor="keepLoggedIn" className="ml-2 text-sm text-gray-700">
+          <label htmlFor=" rememberMe" className="ml-2 text-sm text-gray-700">
             로그인 상태 유지
           </label>
         </div>

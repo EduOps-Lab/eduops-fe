@@ -8,12 +8,12 @@ import AuthLayout from "@/components/auth/layout/AuthLayout";
 import RoleSelectorBtn from "@/components/auth/button/RoleSelectorBtn";
 
 const EDUCATOR_ROLES: RoleOption<EducatorRole>[] = [
-  { label: "강사", value: "instructor" },
-  { label: "조교", value: "assistant" },
+  { label: "강사", value: "INSTRUCTOR" },
+  { label: "조교", value: "ASSISTANT" },
 ];
 
 export default function EducatorsLoginPage() {
-  const [selectedRole, setSelectedRole] = useState<EducatorRole>("instructor");
+  const [selectedRole, setSelectedRole] = useState<EducatorRole>("INSTRUCTOR");
 
   return (
     <AuthLayout

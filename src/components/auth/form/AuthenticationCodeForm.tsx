@@ -45,16 +45,16 @@ export default function AuthenticationCodeForm() {
   });
 
   const handleVerifyCode = async () => {
-    const isValid = await trigger("authenticationCode");
+    const isValid = await trigger("signupCode");
     if (!isValid) return;
 
-    const authenticationCode = getValues("authenticationCode").trim();
-    console.log("인증코드 확인:", authenticationCode);
+    const signupCode = getValues("signupCode").trim();
+    console.log("인증코드 확인:", signupCode);
 
     // 인증 코드 저장
-    setAuthCode(authenticationCode);
+    setAuthCode(signupCode);
 
-    mutation.mutate(authenticationCode);
+    mutation.mutate(signupCode);
   };
 
   const isLoading = mutation.isPending;
@@ -73,14 +73,12 @@ export default function AuthenticationCodeForm() {
           <input
             id="code"
             type="text"
-            {...register("authenticationCode")}
+            {...register("signupCode")}
             className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
             disabled={isLoading || isCodeVerified}
             placeholder="6자리 코드 입력"
-            aria-invalid={errors.authenticationCode ? "true" : "false"}
-            aria-describedby={
-              errors.authenticationCode ? "code-error" : undefined
-            }
+            aria-invalid={errors.signupCode ? "true" : "false"}
+            aria-describedby={errors.signupCode ? "code-error" : undefined}
           />
 
           <button
@@ -116,9 +114,9 @@ export default function AuthenticationCodeForm() {
           * 소속 학원 및 담당 강사 정보가 코드를 통해 자동으로 연결됩니다.
         </p>
 
-        {errors.authenticationCode && (
+        {errors.signupCode && (
           <p id="code-error" className="mt-1 text-sm text-red-600">
-            {errors.authenticationCode.message}
+            {errors.signupCode.message}
           </p>
         )}
       </div>

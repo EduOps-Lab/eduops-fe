@@ -142,7 +142,7 @@ export function TalkNotificationModal() {
                     <div>
                       <p className="text-sm mb-1">{studentData.name}</p>
                       <p className="text-xs text-muted-foreground mb-0.5">
-                        연락처: {studentData.phone}
+                        연락처: {studentData.phoneNumber}
                       </p>
                       <p className="text-xs text-muted-foreground">
                         부모님 연락처: {studentData.parentPhone}

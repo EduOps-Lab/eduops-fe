@@ -11,8 +11,8 @@ export default function AssistantRegisterPage() {
       <AuthenticationCodeForm />
       <RegisterForm
         requireAuthCode={true}
-        userType="educators"
-        role="assistant"
+        roleType="EDUCATORS"
+        userType="ASSISTANT"
       />
     </AuthLayout>
   );

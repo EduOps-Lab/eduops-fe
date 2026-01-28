@@ -40,7 +40,7 @@ export function StudentCreateModal() {
     defaultValues: getCreateStudentFormDefaults(),
   });
 
-  const grade = useWatch({ control, name: "grade" });
+  const schoolYear = useWatch({ control, name: "schoolYear" });
   const assignedClass = useWatch({ control, name: "assignedClass" });
 
   const onSubmit = (data: StudentCreateFormData) => {
@@ -86,15 +86,15 @@ export function StudentCreateModal() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="studentPhone">
+                <Label htmlFor="phoneNumber">
                   연락처 <span className="text-red-500">*</span>
                 </Label>
                 <Input
-                  id="studentPhone"
-                  {...register("phone")}
+                  id="phoneNumber"
+                  {...register("phoneNumber")}
                   placeholder="010-1234-5678"
                 />
-                {errors.phone && (
+                {errors.phoneNumber && (
                   <p className="text-xs text-red-500">{errors.phone.message}</p>
                 )}
               </div>
@@ -118,22 +118,24 @@ export function StudentCreateModal() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="grade">
+                <Label htmlFor="schoolYear">
                   학년 <span className="text-red-500">*</span>
                 </Label>
                 <SelectBtn
-                  value={grade}
+                  value={schoolYear}
                   placeholder="학년 선택"
                   options={GRADE_SELECTING_OPTIONS}
                   onChange={(value) =>
-                    setValue("grade", value, {
+                    setValue("schoolYear", value, {
                       shouldValidate: true,
                       shouldDirty: true,
                     })
                   }
                 />
-                {errors.grade && (
-                  <p className="text-xs text-red-500">{errors.grade.message}</p>
+                {errors.schoolYear && (
+                  <p className="text-xs text-red-500">
+                    {errors.schoolYear.message}
+                  </p>
                 )}
               </div>
             </div>

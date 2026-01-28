@@ -31,58 +31,56 @@ export default function SchoolInfoForm() {
     defaultValues: SCHOOL_INFO_FORM_DEFAULTS,
   });
 
-  const schoolName = useWatch({ control, name: "schoolName" });
-  const grade = useWatch({ control, name: "grade" });
+  const school = useWatch({ control, name: "school" });
+  const schoolYear = useWatch({ control, name: "schoolYear" });
 
   // 값이 바뀔 때마다 store에 반영
   useEffect(() => {
     setSchoolInfo({
-      schoolName,
-      grade,
+      school,
+      schoolYear,
     });
     setSchoolInfoValid(isValid);
-  }, [schoolName, grade, isValid, setSchoolInfo, setSchoolInfoValid]);
+  }, [school, schoolYear, isValid, setSchoolInfo, setSchoolInfoValid]);
 
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label
-            htmlFor="schoolName"
+            htmlFor="school"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
             학교명
           </label>
           <input
-            id="schoolName"
+            id="school"
             type="text"
-            {...register("schoolName")}
+            {...register("school")}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
             placeholder="학교명을 입력하세요"
-            aria-invalid={!!errors.schoolName}
-            aria-describedby={
-              errors.schoolName ? "schoolName-error" : undefined
-            }
+            aria-invalid={!!errors.school}
+            aria-describedby={errors.school ? "school-error" : undefined}
           />
 
-          {errors.schoolName && (
-            <p id="schoolName-error" className="mt-1 text-sm text-red-600">
-              {errors.schoolName.message}
+          {errors.school && (
+            <p id="school-error" className="mt-1 text-sm text-red-600">
+              {errors.school.message}
             </p>
           )}
         </div>
 
         <div>
           <label
-            htmlFor="grade"
+            htmlFor="schoolYear"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
             학년
           </label>
           <Select
-            value={grade}
+            value={schoolYear}
             onValueChange={(value) =>
-              setValue("grade", value, {
+              setValue("schoolYear", value, {
                 shouldValidate: true,
                 shouldDirty: true,
               })
@@ -90,8 +88,10 @@ export default function SchoolInfoForm() {
           >
             <SelectTrigger
               className="w-full h-12 px-4 py-3 border border-gray-300 shadow-none rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              aria-invalid={!!errors.grade}
-              aria-describedby={errors.grade ? "grade-error" : undefined}
+              aria-invalid={!!errors.schoolYear}
+              aria-describedby={
+                errors.schoolYear ? "schoolYear-error" : undefined
+              }
             >
               <SelectValue placeholder="학년 선택" />
             </SelectTrigger>
@@ -105,9 +105,9 @@ export default function SchoolInfoForm() {
             </SelectContent>
           </Select>
 
-          {errors.grade && (
-            <p id="grade-error" className="mt-1 text-sm text-red-600">
-              {errors.grade.message}
+          {errors.schoolYear && (
+            <p id="schoolYear-error" className="mt-1 text-sm text-red-600">
+              {errors.schoolYear.message}
             </p>
           )}
         </div>

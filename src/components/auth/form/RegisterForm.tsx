@@ -7,7 +7,10 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useMutation } from "@tanstack/react-query";
 
-import { registerSchema } from "@/validation/auth.validation";
+import {
+  registerFormSchema,
+  registerRequestSchema,
+} from "@/validation/auth.validation";
 import { RegisterFormData, RegisterUser, Role } from "@/types/auth.type";
 import { useAuthStore, useSchoolStore } from "@/stores/auth.store";
 import { REGISTER_FORM_DEFAULTS } from "@/constants/auth.defaults";
@@ -16,15 +19,15 @@ import { registerAPI, verifyPhoneAPI } from "@/services/auth.service";
 type RegisterFormProps = {
   requireAuthCode?: boolean; // 인증 코드 필요 여부 - 조교
   requireSchoolInfo?: boolean; // 학원 정보 필요 여부 - 학생
-  userType: "educators" | "learners"; // 사용자 타입 (라우팅용: educators, learners)
-  role: Role;
+  roleType: "EDUCATORS" | "LEARNERS"; // 사용자 타입 (라우팅용: educators, learners)
+  userType: Role;
 };
 
 export default function RegisterForm({
   requireAuthCode = false,
   requireSchoolInfo = false,
+  roleType,
   userType,
-  role,
 }: RegisterFormProps) {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
@@ -33,12 +36,12 @@ export default function RegisterForm({
   const {
     isPhoneVerified,
     isCodeVerified,
-    authenticationCode,
+    signupCode,
     setPhoneVerified,
     resetAuth,
   } = useAuthStore();
 
-  const { schoolName, grade, isSchoolInfoValid, resetSchoolInfo } =
+  const { school, schoolYear, isSchoolInfoValid, resetSchoolInfo } =
     useSchoolStore();
 
   const {
@@ -50,7 +53,7 @@ export default function RegisterForm({
     getValues,
     formState: { errors, isValid },
   } = useForm<RegisterFormData>({
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(registerFormSchema),
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues: REGISTER_FORM_DEFAULTS,
@@ -64,11 +67,11 @@ export default function RegisterForm({
 
   // 전화번호 인증 mutation
   const phoneMutation = useMutation({
-    mutationFn: (phone: string) => verifyPhoneAPI(phone),
+    mutationFn: (phoneNumber: string) => verifyPhoneAPI(phoneNumber),
     onSuccess: (data) => {
       if (data.success) {
         setPhoneVerified(true);
-        clearErrors("phone");
+        clearErrors("phoneNumber");
       } else {
         alert("전화번호가 올바르지 않습니다.");
       }
@@ -81,12 +84,12 @@ export default function RegisterForm({
 
   // 전화번호 인증 버튼 클릭 시 실행
   const handleVerifyPhone = async () => {
-    const isValidPhone = await trigger("phone");
+    const isValidPhone = await trigger("phoneNumber");
     if (!isValidPhone) return;
 
     console.log("연락처 인증");
 
-    const phoneValue = getValues("phone");
+    const phoneValue = getValues("phoneNumber");
     phoneMutation.mutate(phoneValue);
   };
 
@@ -99,9 +102,9 @@ export default function RegisterForm({
         resetAuth(); // 인증 상태 초기화
         resetSchoolInfo(); // 학교 정보 초기화
 
-        // userType에 따라 로그인 페이지 분기
+        // roleType에 따라 로그인 페이지 분기
         const loginPath =
-          userType === "educators" ? "/educators/login" : "/learners/login";
+          roleType === "EDUCATORS" ? "/educators/login" : "/learners/login";
         router.push(loginPath);
       } else {
         alert(data.message || "회원가입 실패");
@@ -117,7 +120,7 @@ export default function RegisterForm({
   const onSubmit = (data: RegisterFormData) => {
     // 전화번호 인증 확인 - RHF이 관리
     if (!isPhoneVerified) {
-      setError("phone", {
+      setError("phoneNumber", {
         type: "manual",
         message: "연락처 인증을 완료해주세요",
       });
@@ -136,14 +139,15 @@ export default function RegisterForm({
       return;
     }
 
-    console.log("회원가입 요청");
+    // passwordConfirm 제거
+    const baseData = registerRequestSchema.parse(data);
 
-    // authenticationCode를 포함시키기
+    // signupCode 포함시키기
     const submitData: RegisterUser = {
-      ...data,
-      ...(authenticationCode ? { authenticationCode } : {}),
-      ...(requireSchoolInfo ? { schoolName, grade } : {}),
-      role,
+      ...baseData,
+      ...(signupCode ? { signupCode } : {}),
+      ...(requireSchoolInfo ? { school, schoolYear } : {}),
+      userType,
     };
 
     // mutation 호출
@@ -163,24 +167,24 @@ export default function RegisterForm({
         {/* 이름 입력 */}
         <div>
           <label
-            htmlFor="fullName"
+            htmlFor="name"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
             이름
           </label>
           <input
-            id="fullName"
+            id="name"
             type="text"
-            {...register("fullName")}
+            {...register("name")}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
             placeholder="실명을 입력해주세요"
-            aria-invalid={errors.fullName ? "true" : "false"}
-            aria-describedby={errors.fullName ? "fullName-error" : undefined}
+            aria-invalid={errors.name ? "true" : "false"}
+            aria-describedby={errors.name ? "name-error" : undefined}
           />
 
-          {errors.fullName && (
-            <p id="fullName-error" className="mt-1 text-sm text-red-600">
-              {errors.fullName.message}
+          {errors.name && (
+            <p id="name-error" className="mt-1 text-sm text-red-600">
+              {errors.name.message}
             </p>
           )}
         </div>
@@ -188,21 +192,23 @@ export default function RegisterForm({
         {/* 연락처 입력*/}
         <div>
           <label
-            htmlFor="phone"
+            htmlFor="phoneNumber"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
             연락처
           </label>
           <div className="flex gap-2">
             <input
-              id="phone"
+              id="phoneNumber"
               type="tel"
-              {...register("phone")}
+              {...register("phoneNumber")}
               className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
               disabled={isPhoneVerified || phoneMutation.isPending}
               placeholder="010-1234-5678"
-              aria-invalid={errors.phone ? "true" : "false"}
-              aria-describedby={errors.phone ? "phone-error" : undefined}
+              aria-invalid={errors.phoneNumber ? "true" : "false"}
+              aria-describedby={
+                errors.phoneNumber ? "phoneNumber-error" : undefined
+              }
             />
 
             <button
@@ -230,9 +236,9 @@ export default function RegisterForm({
             </button>
           </div>
 
-          {errors.phone && (
+          {errors.phoneNumber && (
             <p id="phone-error" className="mt-1 text-sm text-red-600">
-              {errors.phone.message}
+              {errors.phoneNumber.message}
             </p>
           )}
         </div>
@@ -392,7 +398,7 @@ export default function RegisterForm({
         <p className="text-sm text-gray-600">이미 계정이 있으신가요?</p>
         <Link
           href={
-            userType === "educators" ? "/educators/login" : "/learners/login"
+            roleType === "EDUCATORS" ? "/educators/login" : "/learners/login"
           }
           className="text-blue-600 hover:text-blue-700 font-medium"
         >

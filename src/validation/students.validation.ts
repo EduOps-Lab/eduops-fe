@@ -4,8 +4,8 @@ import z from "zod";
 const studentBaseSchema = z.object({
   name: z.string().trim().min(1, "학생 이름을 입력해주세요"),
   school: z.string().trim().min(1, "학교명을 입력해주세요"),
-  grade: z.string().min(1, "학년을 입력해주세요"),
-  phone: z
+  schoolYear: z.string().min(1, "학년을 입력해주세요"),
+  phoneNumber: z
     .string()
     .trim()
     .min(1, "학생 연락처를 입력해주세요")

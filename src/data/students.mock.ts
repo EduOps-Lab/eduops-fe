@@ -9,9 +9,9 @@ export const mockStudentEnrollments: StudentEnrollment[] = [
     id: "stu-001",
     email: "minjun@example.com",
     name: "김민준",
-    phone: "010-2345-6789",
+    phoneNumber: "010-2345-6789",
     school: "서울고등학교",
-    grade: "고3",
+    schoolYear: "고3",
     profileImage: studentProfile.src,
     isAppUser: true,
     parentPhone: "010-9876-5432",
@@ -65,9 +65,9 @@ export const mockStudentEnrollments: StudentEnrollment[] = [
     id: null,
     email: "seoyeon@example.com",
     name: "이서연",
-    phone: "010-5555-1111",
+    phoneNumber: "010-5555-1111",
     school: "중앙여중",
-    grade: "중3",
+    schoolYear: "중3",
     profileImage: undefined,
     isAppUser: false,
     parentPhone: "010-2222-3333",
@@ -115,9 +115,9 @@ export const mockStudentEnrollments: StudentEnrollment[] = [
     id: "stu-003",
     email: "jihoon@example.com",
     name: "박지훈",
-    phone: "010-7777-8888",
+    phoneNumber: "010-7777-8888",
     school: "부산고등학교",
-    grade: "고1",
+    schoolYear: "고1",
     profileImage: undefined,
     isAppUser: true,
     parentPhone: "010-9999-0000",
@@ -148,9 +148,9 @@ export const mockStudentEnrollments: StudentEnrollment[] = [
     id: "stu-004",
     email: "haeun@example.com",
     name: "정하은",
-    phone: "010-1212-3434",
+    phoneNumber: "010-1212-3434",
     school: "대전여고",
-    grade: "고3",
+    schoolYear: "고3",
     profileImage: studentProfile.src,
     isAppUser: true,
     parentPhone: "010-4545-6767",
@@ -194,9 +194,9 @@ export const mockStudentEnrollments: StudentEnrollment[] = [
     id: "stu-005",
     email: "yunseo@example.com",
     name: "최윤서",
-    phone: "010-3333-6666",
+    phoneNumber: "010-3333-6666",
     school: "대전여고",
-    grade: "고2",
+    schoolYear: "고2",
     profileImage: studentProfile.src,
     isAppUser: false,
     parentPhone: "010-8888-1111",
@@ -228,7 +228,7 @@ export type Student = {
   id: string;
   name: string;
   school: string;
-  grade: string;
+  schoolYear: string;
   phone: string;
 };
 
@@ -237,14 +237,14 @@ export const mockStudents: Student[] = [
     id: "1",
     name: "구민지",
     school: "서하늘고",
-    grade: "고2",
+    schoolYear: "고2",
     phone: "010-4001-1001",
   },
   {
     id: "2",
     name: "김민수",
     school: "서울고",
-    grade: "고2",
+    schoolYear: "고2",
     phone: "010-5678-1111",
   },
 ];

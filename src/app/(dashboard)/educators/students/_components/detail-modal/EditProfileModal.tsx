@@ -128,30 +128,30 @@ export default function EditProfileModal({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="grade">학년</Label>
+                <Label htmlFor="schoolYear">학년</Label>
                 <Input
-                  id="grade"
+                  id="schoolYear"
                   className="w-full"
                   disabled={!isEditMode}
-                  {...register("grade")}
+                  {...register("schoolYear")}
                   placeholder="학년"
                 />
-                {errors.grade && (
-                  <p className="text-red-500">{errors.grade.message}</p>
+                {errors.schoolYear && (
+                  <p className="text-red-500">{errors.schoolYear.message}</p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phone">연락처</Label>
+                <Label htmlFor="phoneNumber">연락처</Label>
                 <Input
-                  id="phone"
+                  id="phoneNumber"
                   className="w-full"
                   disabled={!isEditMode}
-                  {...register("phone")}
+                  {...register("phoneNumber")}
                   placeholder="연락처"
                 />
-                {errors.phone && (
-                  <p className="text-red-500">{errors.phone.message}</p>
+                {errors.phoneNumber && (
+                  <p className="text-red-500">{errors.phoneNumber.message}</p>
                 )}
               </div>
 

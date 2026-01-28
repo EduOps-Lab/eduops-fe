@@ -8,12 +8,12 @@ import type {
 export const LOGIN_FORM_DEFAULTS: LoginFormData = {
   email: "",
   password: "",
-  keepLoggedIn: false,
+  rememberMe: false,
 };
 
 export const REGISTER_FORM_DEFAULTS: RegisterFormData = {
-  fullName: "",
-  phone: "",
+  name: "",
+  phoneNumber: "",
   email: "",
   password: "",
   passwordConfirm: "",
@@ -21,10 +21,10 @@ export const REGISTER_FORM_DEFAULTS: RegisterFormData = {
 };
 
 export const AUTH_CODE_FORM_DEFAULTS: AuthCodeFormData = {
-  authenticationCode: "",
+  signupCode: "",
 };
 
 export const SCHOOL_INFO_FORM_DEFAULTS: SchoolInfoFormData = {
-  schoolName: "",
-  grade: "",
+  school: "",
+  schoolYear: "",
 };

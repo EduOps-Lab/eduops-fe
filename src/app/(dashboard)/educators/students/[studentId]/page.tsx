@@ -86,10 +86,10 @@ export default function StudentDetailPage() {
                     </span>
                   </h2>
                   <p className="text-sm text-muted-foreground mt-1">
-                    🎓 {studentData.school} · {studentData.grade}
+                    🎓 {studentData.school} · {studentData.schoolYear}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    📱 {studentData.phone}
+                    📱 {studentData.phoneNumber}
                   </p>
                   <p className="text-sm text-muted-foreground">
                     ✉️ {studentData.email}
@@ -189,7 +189,7 @@ export default function StudentDetailPage() {
                       {lecture.subject}
                     </span>
                     <span className="text-xs text-muted-foreground">
-                      {lecture.grade}
+                      {lecture.schoolYear}
                     </span>
                   </div>
                   <h4 className="font-semibold text-lg">{lecture.name}</h4>
