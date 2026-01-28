@@ -9,30 +9,27 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend,
-  ReferenceDot,
 } from "recharts";
 
 import { LectureExamResult } from "@/types/lecture-exams.type";
 
 type ScoreChartProps = {
   exams: LectureExamResult[];
-  selectedExamId: string | null;
+  selectedExamIds: string[];
 };
 
-export default function ScoreChart({ exams, selectedExamId }: ScoreChartProps) {
-  if (!selectedExamId) {
-    return (
-      <div className="flex items-center justify-center h-[300px] text-muted-foreground">
-        시험을 선택해주세요.
-      </div>
+export default function ScoreChart({
+  exams,
+  selectedExamIds,
+}: ScoreChartProps) {
+  // 선택된 시험만 필터링
+  const filteredExams = exams
+    .filter((exam) => selectedExamIds.includes(exam.examId))
+    .sort(
+      (a, b) => new Date(a.examDate).getTime() - new Date(b.examDate).getTime()
     );
-  }
 
-  const sortedExams = [...exams].sort(
-    (a, b) => new Date(a.examDate).getTime() - new Date(b.examDate).getTime()
-  );
-
-  const chartData = sortedExams.map((exam) => ({
+  const chartData = filteredExams.map((exam) => ({
     examId: exam.examId,
     name: exam.examName,
     score: exam.score,
@@ -40,9 +37,13 @@ export default function ScoreChart({ exams, selectedExamId }: ScoreChartProps) {
     date: exam.examDate.substring(5),
   }));
 
-  const selectedExam = sortedExams.find(
-    (exam) => exam.examId === selectedExamId
-  );
+  if (!chartData.length) {
+    return (
+      <div className="flex items-center justify-center h-[300px] text-muted-foreground">
+        선택된 시험이 없습니다.
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-[350px]">
@@ -84,8 +85,10 @@ export default function ScoreChart({ exams, selectedExamId }: ScoreChartProps) {
               <circle
                 cx={cx}
                 cy={cy}
-                r={payload.examId === selectedExamId ? 6 : 4}
-                fill={payload.examId === selectedExamId ? "#ef4444" : "#3b82f6"}
+                r={payload.examId === selectedExamIds ? 6 : 4}
+                fill={
+                  payload.examId === selectedExamIds ? "#ef4444" : "#3b82f6"
+                }
                 stroke="white"
                 strokeWidth={2}
               />
@@ -101,17 +104,6 @@ export default function ScoreChart({ exams, selectedExamId }: ScoreChartProps) {
             dot={{ r: 3 }}
             name="반 평균"
           />
-
-          {selectedExam && (
-            <ReferenceDot
-              x={selectedExam.examName}
-              y={selectedExam.score}
-              r={8}
-              fill="#ef4444"
-              stroke="white"
-              strokeWidth={2}
-            />
-          )}
         </LineChart>
       </ResponsiveContainer>
     </div>

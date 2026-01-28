@@ -15,13 +15,13 @@ import { LectureExamResult } from "@/types/lecture-exams.type";
 
 type ExamListTableProps = {
   exams: LectureExamResult[];
-  selectedExamId: string | null;
+  selectedExamIds: string[];
   onSelectExam: (examId: string) => void;
 };
 
 export default function ExamListTable({
   exams,
-  selectedExamId,
+  selectedExamIds,
   onSelectExam,
 }: ExamListTableProps) {
   const [visibleCount, setVisibleCount] = useState(5);
@@ -58,7 +58,7 @@ export default function ExamListTable({
               <TableRow
                 key={exam.examId}
                 className={`cursor-pointer hover:bg-muted/50 ${
-                  selectedExamId === exam.examId ? "bg-primary/10" : ""
+                  selectedExamIds.includes(exam.examId) ? "bg-primary/10" : ""
                 }`}
                 onClick={() => onSelectExam(exam.examId)}
               >

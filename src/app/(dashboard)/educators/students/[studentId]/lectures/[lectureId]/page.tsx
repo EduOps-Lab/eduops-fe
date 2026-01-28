@@ -19,7 +19,22 @@ export default function LectureDetailPage() {
   const studentId = params.studentId as string;
   const lectureId = params.lectureId as string;
 
-  const [selectedExamId, setSelectedExamId] = useState<string | null>(null);
+  const [selectedExamIds, setSelectedExamIds] = useState<string[]>([]);
+
+  // 시험 리스트(테이블) 클릭
+  const handleSelectExam = (examId: string) => {
+    setSelectedExamIds(
+      (prev) =>
+        prev.includes(examId)
+          ? prev.filter((id) => id !== examId) // 이미 선택되었으면 제거
+          : [...prev, examId] // 선택 추가
+    );
+  };
+
+  // 선택 초기화
+  const handleResetSelection = () => {
+    setSelectedExamIds([]);
+  };
 
   // 강의 정보 조회
   const lecture = mockLectures.find((lec) => lec.id === lectureId);
@@ -31,6 +46,7 @@ export default function LectureDetailPage() {
 
   if (!lecture) {
     return (
+      // TODO: 공용 컴포넌트
       <div className="flex flex-col items-center justify-center h-screen px-8 py-8">
         <p>수업 정보를 찾을 수 없습니다.</p>
         <Button onClick={() => router.back()} className="mt-4 cursor-pointer">
@@ -40,10 +56,13 @@ export default function LectureDetailPage() {
     );
   }
 
-  // 선택된 시험 정보
-  const selectedExam = selectedExamId
-    ? lectureExamData?.exams.find((exam) => exam.examId === selectedExamId)
-    : null;
+  // 선택된 시험이 1개일 때만 통계 카드 표시, 아니면 "-"
+  const singleSelectedExam =
+    selectedExamIds.length === 1
+      ? lectureExamData?.exams.find(
+          (exam) => exam.examId === selectedExamIds[0]
+        )
+      : null;
 
   return (
     <div className="container mx-auto px-8 py-8 space-y-6 max-w-[1200px]">
@@ -64,11 +83,11 @@ export default function LectureDetailPage() {
               </p>
             </div>
             <p className="text-3xl font-bold">
-              {selectedExam ? `${selectedExam.score}점` : "-"}
+              {singleSelectedExam ? `${singleSelectedExam.score}점` : "-"}
             </p>
             <div className="pt-3">
               <p className="text-xs font-bold text-muted-foreground">
-                {selectedExam ? `${selectedExam.examName}` : "-"}
+                {singleSelectedExam ? `${singleSelectedExam.examName}` : "-"}
               </p>
             </div>
           </CardContent>
@@ -82,13 +101,13 @@ export default function LectureDetailPage() {
               </p>
             </div>
             <p className="text-3xl font-bold">
-              {selectedExam
-                ? `${selectedExam.classRank} / ${selectedExam.totalStudents}`
+              {singleSelectedExam
+                ? `${singleSelectedExam.classRank} / ${singleSelectedExam.totalStudents}`
                 : "-"}
             </p>
             <div className="pt-3">
               <p className="text-xs font-bold text-muted-foreground">
-                {selectedExam ? `${selectedExam.examName}` : "-"}
+                {singleSelectedExam ? `${singleSelectedExam.examName}` : "-"}
               </p>
             </div>
           </CardContent>
@@ -100,7 +119,9 @@ export default function LectureDetailPage() {
               <p className="text-sm font-bold text-muted-foreground">반 인원</p>
             </div>
             <p className="text-3xl font-bold">
-              {selectedExam ? `${selectedExam.totalStudents}명` : "-"}
+              {singleSelectedExam
+                ? `${singleSelectedExam.totalStudents}명`
+                : "-"}
             </p>
             <div className="pt-3">
               <p className="text-xs font-bold text-muted-foreground">
@@ -114,19 +135,27 @@ export default function LectureDetailPage() {
       {/* 성적 변화 그래프 */}
       <Card>
         <CardContent className="p-6">
-          <div className="pb-10">
+          <div className="flex items-center justify-between pb-10">
             <p className="text-sm font-bold text-muted-foreground">
               성적 변화 추이
             </p>
+            {/* 선택 초기화 버튼 */}
+            <div>
+              {selectedExamIds.length > 0 && (
+                <Button variant="outline" onClick={handleResetSelection}>
+                  선택 초기화
+                </Button>
+              )}
+            </div>
           </div>
           {lectureExamData?.exams.length ? (
             <ScoreChart
               exams={lectureExamData.exams}
-              selectedExamId={selectedExamId}
+              selectedExamIds={selectedExamIds}
             />
           ) : (
             <div className="flex items-center justify-center h-[300px] text-muted-foreground">
-              등록된 시험이 없습니다.
+              선택된 시험이 없습니다.
             </div>
           )}
         </CardContent>
@@ -142,8 +171,8 @@ export default function LectureDetailPage() {
           {lectureExamData ? (
             <ExamListTable
               exams={lectureExamData.exams}
-              selectedExamId={selectedExamId}
-              onSelectExam={setSelectedExamId}
+              selectedExamIds={selectedExamIds}
+              onSelectExam={handleSelectExam}
             />
           ) : (
             <div className="text-center text-muted-foreground py-8">

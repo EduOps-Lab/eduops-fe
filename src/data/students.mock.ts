@@ -17,7 +17,7 @@ export const mockStudentEnrollments: StudentEnrollment[] = [
     parentPhone: "010-9876-5432",
     lecture: {
       id: "lec-001",
-      title: "고2 수학 심화반",
+      title: "고3 수능대비",
       subject: "수학",
       isActive: true,
     },
