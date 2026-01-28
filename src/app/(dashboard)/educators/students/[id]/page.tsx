@@ -113,7 +113,9 @@ export default function StudentDetailPage() {
               <Button
                 className="cursor-pointer"
                 variant="outline"
-                onClick={() => openModal(<AttendanceDetailModal />)}
+                onClick={() =>
+                  openModal(<AttendanceDetailModal studentData={studentData} />)
+                }
               >
                 출결 상세
               </Button>

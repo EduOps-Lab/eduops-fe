@@ -4,7 +4,7 @@ import z from "zod";
 const studentBaseSchema = z.object({
   name: z.string().trim().min(1, "학생 이름을 입력해주세요"),
   school: z.string().trim().min(1, "학교명을 입력해주세요"),
-  grade: z.string().trim().min(1, "학년을 입력해주세요"),
+  grade: z.string().min(1, "학년을 입력해주세요"),
   phone: z
     .string()
     .trim()
@@ -24,13 +24,13 @@ const studentBaseSchema = z.object({
 });
 
 export const studentCreateSchema = studentBaseSchema.extend({
-  assignedClass: z.string().trim().min(1, "배정 클래스를 선택해주세요"),
+  assignedClass: z.string().min(1, "배정 클래스를 선택해주세요"),
   registrationDate: z.string(),
   memo: z.string().optional(),
 });
 
 export const classChangeSchema = {
-  assignedClass: z.string().trim().min(1, "배정 클래스를 선택해주세요"),
+  assignedClass: z.string().min(1, "배정 클래스를 선택해주세요"),
   memo: z.string().optional(),
 };
 
@@ -43,7 +43,7 @@ export const editProfileSchema = studentBaseSchema.extend({
 });
 
 export const AttendanceRegisterSchema = z.object({
-  date: z.string(),
-  status: z.enum(["PRESENT", "LATE", "ABSENT", "EARLY_LEAVE"]),
+  date: z.string().min(1, "출결 날짜를 선택해주세요"),
+  status: z.string().min(1, "출결 상태를 선택해주세요"),
   memo: z.string().optional(),
 });

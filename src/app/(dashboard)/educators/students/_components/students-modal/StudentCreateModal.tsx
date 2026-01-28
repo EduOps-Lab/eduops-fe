@@ -132,6 +132,9 @@ export function StudentCreateModal() {
                     })
                   }
                 />
+                {errors.grade && (
+                  <p className="text-xs text-red-500">{errors.grade.message}</p>
+                )}
               </div>
             </div>
           </div>

@@ -45,6 +45,13 @@ export const STUDENTS_TABLE_COLUMNS = [
   { key: "action", label: "상태" },
 ];
 
+export const ATTENDANCE_STATUS_OPTIONS = [
+  { label: "출석", value: "PRESENT" },
+  { label: "결석", value: "ABSENT" },
+  { label: "조퇴", value: "EARLY_LEAVE" },
+  { label: "지각", value: "LATE" },
+];
+
 export const getCreateStudentFormDefaults = (): StudentCreateFormData => {
   return {
     name: "",
@@ -74,6 +81,6 @@ export const EDIT_PROFILE_FORM_DEFAULTS: EditProfileFormData = {
 
 export const ATTENDANCE_REGISTER_FORM_DEFAULTS: AttendanceRegisterFormData = {
   date: getTodayISODate(),
-  status: "PRESENT",
+  status: "",
   memo: "",
 };
