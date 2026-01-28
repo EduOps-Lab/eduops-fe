@@ -42,6 +42,7 @@ export const createStudentColumns = ({
         checked={selectedStudents.includes(row.original.enrollmentId)}
         onCheckedChange={() => onSelectStudent(row.original.enrollmentId)}
         onClick={(e) => e.stopPropagation()}
+        aria-label={`${row.original.name} 선택`}
       />
     ),
     size: 50,

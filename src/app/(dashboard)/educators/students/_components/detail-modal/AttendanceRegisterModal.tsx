@@ -12,7 +12,7 @@ import { useModal } from "@/providers/ModalProvider";
 import { AttendanceRegisterFormData } from "@/types/students.type";
 import { AttendanceRegisterSchema } from "@/validation/students.validation";
 import {
-  ATTENDANCE_REGISTER_FORM_DEFAULTS,
+  getAttendanceRegisterFormDefaults,
   ATTENDANCE_STATUS_OPTIONS,
 } from "@/constants/students.default";
 import SelectBtn from "@/components/common/button/SelectBtn";
@@ -34,7 +34,7 @@ export default function AttendanceRegisterModal() {
   } = useForm<AttendanceRegisterFormData>({
     resolver: zodResolver(AttendanceRegisterSchema),
     mode: "onChange",
-    defaultValues: ATTENDANCE_REGISTER_FORM_DEFAULTS,
+    defaultValues: getAttendanceRegisterFormDefaults(),
   });
 
   const status = useWatch({ control, name: "status" });
@@ -66,7 +66,7 @@ export default function AttendanceRegisterModal() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="date">수업 일자</Label>
-                <Input type="date" {...register("date")} />
+                <Input id="date" type="date" {...register("date")} />
                 {errors.date && (
                   <p className="text-red-500">{errors.date.message}</p>
                 )}
@@ -77,6 +77,7 @@ export default function AttendanceRegisterModal() {
               <div className="space-y-2">
                 <Label htmlFor="status">출결 상태</Label>
                 <SelectBtn
+                  id="status"
                   value={status}
                   placeholder="출결 상태"
                   options={ATTENDANCE_STATUS_OPTIONS}
@@ -96,6 +97,7 @@ export default function AttendanceRegisterModal() {
             <div className="space-y-2">
               <Label htmlFor="memo">메모</Label>
               <Textarea
+                id="memo"
                 {...register("memo")}
                 placeholder="특이사항을 입력하세요."
               />

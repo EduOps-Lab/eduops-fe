@@ -154,7 +154,7 @@ export default function LectureDetailPage() {
             />
           ) : (
             <div className="flex items-center justify-center h-[300px] text-muted-foreground">
-              선택된 시험이 없습니다.
+              표시할 데이터가 없습니다.
             </div>
           )}
         </CardContent>

@@ -25,14 +25,14 @@ const studentBaseSchema = z.object({
 
 export const studentCreateSchema = studentBaseSchema.extend({
   assignedClass: z.string().min(1, "배정 클래스를 선택해주세요"),
-  registrationDate: z.string(),
+  registrationDate: z.string().min(1, "등록일을 입력해주세요"),
   memo: z.string().optional(),
 });
 
-export const classChangeSchema = {
+export const classChangeSchema = z.object({
   assignedClass: z.string().min(1, "배정 클래스를 선택해주세요"),
   memo: z.string().optional(),
-};
+});
 
 export const editProfileSchema = studentBaseSchema.extend({
   email: z

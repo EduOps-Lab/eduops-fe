@@ -44,39 +44,28 @@ export default function ExamListTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {exams.length === 0 ? (
-            <TableRow>
-              <TableCell
-                colSpan={5}
-                className="text-center text-muted-foreground"
-              >
-                등록된 시험이 없습니다.
+          {exams.slice(0, visibleCount).map((exam) => (
+            <TableRow
+              key={exam.examId}
+              className={`cursor-pointer hover:bg-muted/50 ${
+                selectedExamIds.includes(exam.examId) ? "bg-primary/10" : ""
+              }`}
+              onClick={() => onSelectExam(exam.examId)}
+            >
+              <TableCell className="font-medium">{exam.examName}</TableCell>
+              <TableCell>{exam.examDate}</TableCell>
+              <TableCell className="text-center">{exam.subject}</TableCell>
+              <TableCell className="text-center font-semibold">
+                {exam.score}점
+              </TableCell>
+              <TableCell className="text-center">
+                {exam.classAverage}점
+              </TableCell>
+              <TableCell className="text-center">
+                {exam.classRank}등 / {exam.totalStudents}명
               </TableCell>
             </TableRow>
-          ) : (
-            exams.slice(0, visibleCount).map((exam) => (
-              <TableRow
-                key={exam.examId}
-                className={`cursor-pointer hover:bg-muted/50 ${
-                  selectedExamIds.includes(exam.examId) ? "bg-primary/10" : ""
-                }`}
-                onClick={() => onSelectExam(exam.examId)}
-              >
-                <TableCell className="font-medium">{exam.examName}</TableCell>
-                <TableCell>{exam.examDate}</TableCell>
-                <TableCell className="text-center">{exam.subject}</TableCell>
-                <TableCell className="text-center font-semibold">
-                  {exam.score}점
-                </TableCell>
-                <TableCell className="text-center">
-                  {exam.classAverage}점
-                </TableCell>
-                <TableCell className="text-center">
-                  {exam.classRank}등 / {exam.totalStudents}명
-                </TableCell>
-              </TableRow>
-            ))
-          )}
+          ))}
         </TableBody>
       </Table>
 

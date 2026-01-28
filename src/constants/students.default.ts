@@ -79,8 +79,11 @@ export const EDIT_PROFILE_FORM_DEFAULTS: EditProfileFormData = {
   parentPhone: "",
 };
 
-export const ATTENDANCE_REGISTER_FORM_DEFAULTS: AttendanceRegisterFormData = {
-  date: getTodayISODate(),
-  status: "",
-  memo: "",
-};
+export const getAttendanceRegisterFormDefaults =
+  (): AttendanceRegisterFormData => {
+    return {
+      date: getTodayISODate(),
+      status: "",
+      memo: "",
+    };
+  };

@@ -81,18 +81,7 @@ export default function ScoreChart({
             stroke="#3b82f6"
             strokeWidth={2}
             name="내 점수"
-            dot={({ cx, cy, payload }) => (
-              <circle
-                cx={cx}
-                cy={cy}
-                r={payload.examId === selectedExamIds ? 6 : 4}
-                fill={
-                  payload.examId === selectedExamIds ? "#ef4444" : "#3b82f6"
-                }
-                stroke="white"
-                strokeWidth={2}
-              />
-            )}
+            dot={{ r: 4, fill: "#3b82f6", stroke: "white", strokeWidth: 2 }}
           />
 
           {/* 반 평균 */}

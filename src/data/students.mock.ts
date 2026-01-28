@@ -11,7 +11,7 @@ export const mockStudentEnrollments: StudentEnrollment[] = [
     name: "김민준",
     phone: "010-2345-6789",
     school: "서울고등학교",
-    grade: "고2",
+    grade: "고3",
     profileImage: studentProfile.src,
     isAppUser: true,
     parentPhone: "010-9876-5432",
