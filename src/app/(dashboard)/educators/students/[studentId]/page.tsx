@@ -21,7 +21,7 @@ export default function StudentDetailPage() {
   const router = useRouter();
   const { openModal } = useModal();
 
-  const enrollmentId = params.id as string;
+  const enrollmentId = params.studentId as string;
 
   const [visibleLectures, setVisibleLectures] = useState(6);
 
@@ -172,7 +172,12 @@ export default function StudentDetailPage() {
           {enrolledLectures.slice(0, visibleLectures).map((lecture) => (
             <Card
               key={lecture.id}
-              className="hover:shadow-md transition-shadow relative"
+              className="hover:shadow-md transition-shadow relative cursor-pointer"
+              onClick={() =>
+                router.push(
+                  `/educators/students/${enrollmentId}/lectures/${lecture.id}`
+                )
+              }
             >
               <CardContent className="w-full">
                 <div className="absolute top-0 left-0 w-full h-[40%] bg-blue-500 rounded-t-lg"></div>
