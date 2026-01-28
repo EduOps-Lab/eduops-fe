@@ -1,0 +1,42 @@
+export type GradingStudentStatus = "대기" | "임시 저장";
+
+export type GradingStudent = {
+  id: string;
+  name: string;
+  lectureName: string;
+  status: GradingStudentStatus;
+  score?: number;
+};
+
+export type GradingQuestionStatus = "미입력" | "정답" | "오답";
+
+export type GradingQuestionType = "객관식" | "주관식";
+
+export type GradingQuestion = {
+  id: string;
+  number: number;
+  title: string;
+  type: GradingQuestionType;
+  score: number;
+  correctAnswer?: number | string;
+  studentAnswer?: number | string;
+  status?: GradingQuestionStatus;
+};
+
+export type GradingSummary = {
+  selectedStudentName: string;
+  selectedStudentLecture: string;
+  currentScore: number;
+  totalScore: number;
+  passingScore: number;
+  correctCount: number;
+  totalQuestions: number;
+  correctRate: number;
+  isPassed: boolean;
+};
+
+export type GradingExamInfo = {
+  examName: string;
+  lectureName: string;
+  examSubtitle: string;
+};
