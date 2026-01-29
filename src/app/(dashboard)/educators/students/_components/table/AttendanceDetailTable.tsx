@@ -1,13 +1,6 @@
 "use client";
 
 import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-
-import {
   Table,
   TableBody,
   TableCell,
@@ -33,29 +26,35 @@ const STATUS_COLOR: Record<AttendanceStatus, string> = {
   EARLY_LEAVE: "text-blue-600",
 };
 
-export const columns: ColumnDef<AttendanceRecord>[] = [
-  {
-    accessorKey: "date",
-    header: "수업 일자",
-    cell: ({ row }) => row.original.date,
-  },
-  {
-    accessorKey: "status",
-    header: "출결 상태",
-    cell: ({ row }) => {
-      const status = row.original.status;
+type AttendanceTableColumn = {
+  key: string;
+  label: string;
+  render: (row: AttendanceRecord) => React.ReactNode;
+};
 
-      return (
-        <span className={`font-medium ${STATUS_COLOR[status]}`}>
-          {STATUS_LABEL[status]}
-        </span>
-      );
-    },
+const ATTENDANCE_TABLE_COLUMNS: AttendanceTableColumn[] = [
+  {
+    key: "date",
+    label: "수업 일자",
+    render: (row: AttendanceRecord) => (
+      <span className="text-sm whitespace-nowrap">{row.date}</span>
+    ),
   },
   {
-    accessorKey: "memo",
-    header: "메모",
-    cell: ({ row }) => row.original.memo ?? "-",
+    key: "status",
+    label: "출결 상태",
+    render: (row: AttendanceRecord) => (
+      <span className={`font-medium ${STATUS_COLOR[row.status]}`}>
+        {STATUS_LABEL[row.status]}
+      </span>
+    ),
+  },
+  {
+    key: "memo",
+    label: "메모",
+    render: (row: AttendanceRecord) => (
+      <span className="text-sm whitespace-nowrap">{row.memo ?? "-"}</span>
+    ),
   },
 ];
 
@@ -64,43 +63,35 @@ export default function AttendanceDetailTable({
 }: {
   records: AttendanceRecord[];
 }) {
-  const table = useReactTable<AttendanceRecord>({
-    data: records,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
   return (
     <Table>
       <TableHeader>
-        {table.getHeaderGroups().map((headerGroup) => (
-          <TableRow key={headerGroup.id}>
-            {headerGroup.headers.map((header) => (
-              <TableHead key={header.id}>
-                {flexRender(
-                  header.column.columnDef.header,
-                  header.getContext()
-                )}
-              </TableHead>
-            ))}
-          </TableRow>
-        ))}
+        <TableRow>
+          {ATTENDANCE_TABLE_COLUMNS.map((col) => (
+            <TableHead key={col.key} className="whitespace-nowrap">
+              {col.label}
+            </TableHead>
+          ))}
+        </TableRow>
       </TableHeader>
 
       <TableBody>
-        {table.getRowModel().rows.length > 0 ? (
-          table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+        {records.length > 0 ? (
+          records.map((record, index) => (
+            <TableRow key={`${record.date}-${index}`}>
+              {ATTENDANCE_TABLE_COLUMNS.map((col) => (
+                <TableCell key={col.key} className="whitespace-nowrap text-sm">
+                  {col.render(record)}
                 </TableCell>
               ))}
             </TableRow>
           ))
         ) : (
           <TableRow>
-            <TableCell colSpan={columns.length} className="text-center">
+            <TableCell
+              colSpan={ATTENDANCE_TABLE_COLUMNS.length}
+              className="text-center"
+            >
               출결 기록이 없습니다.
             </TableCell>
           </TableRow>

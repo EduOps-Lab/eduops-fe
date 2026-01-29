@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { createColumnHelper } from "@tanstack/react-table";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import MiniLabel from "@/components/common/label/RoundStatusLabel";
@@ -8,164 +7,125 @@ import { STATUS_SETTING_OPTIONS } from "@/constants/students.default";
 import { StudentEnrollment } from "@/types/students.type";
 import noProfileImage from "@/assets/images/no-profile.jpg";
 
-const columnHelper = createColumnHelper<StudentEnrollment>();
+export type StudentTableColumn = {
+  key: string;
+  render: (row: StudentEnrollment) => React.ReactNode;
+};
 
-export const createStudentColumns = ({
+export const StudentTableData = ({
   selectedStudents,
   onSelectStudent,
+  onStatusChange,
   onNavigate,
-  isAllSelected,
-  onSelectAll,
 }: {
   selectedStudents: string[];
-  onSelectStudent: (id: string) => void;
+  onSelectStudent: (id: string, checked: boolean) => void;
+  onStatusChange: (id: string, status: string) => void;
   onNavigate: (enrollmentId: string) => void;
-  isAllSelected: boolean;
-  onSelectAll: (checked: boolean) => void;
-}) => [
-  columnHelper.display({
-    id: "select",
-    header: () => (
-      // 전체 선택 체크박스
+}): StudentTableColumn[] => [
+  {
+    key: "select",
+    render: (row: StudentEnrollment) => (
       <Checkbox
         className="cursor-pointer"
-        checked={isAllSelected}
-        onCheckedChange={(checked) => onSelectAll(!!checked)}
-        onClick={(e) => e.stopPropagation()}
-        aria-label="전체 선택"
+        checked={selectedStudents.includes(row.enrollmentId)}
+        onCheckedChange={(checked) =>
+          onSelectStudent(row.enrollmentId, checked as boolean)
+        }
       />
     ),
-    cell: ({ row }) => (
-      // 개별 선택 체크박스
-      <Checkbox
-        className="cursor-pointer"
-        checked={selectedStudents.includes(row.original.enrollmentId)}
-        onCheckedChange={() => onSelectStudent(row.original.enrollmentId)}
-        onClick={(e) => e.stopPropagation()}
-        aria-label={`${row.original.name} 선택`}
-      />
-    ),
-    size: 50,
-  }),
-
-  columnHelper.display({
-    id: "profile",
-    header: "프로필",
-    cell: ({ row }) => (
+  },
+  {
+    key: "profile",
+    render: (row: StudentEnrollment) => (
       <Image
-        src={row.original.profileImage ?? noProfileImage.src}
-        alt={row.original.name}
+        src={row.profileImage || noProfileImage.src}
+        alt={row.name}
         width={32}
         height={32}
         className="rounded-full"
       />
     ),
-  }),
-
-  columnHelper.display({
-    id: "name",
-    header: "이름",
-    cell: ({ row }) => (
+  },
+  {
+    key: "name",
+    render: (row: StudentEnrollment) => (
       <span
         className="font-medium whitespace-nowrap text-sm cursor-pointer hover:text-primary hover:underline"
-        onClick={(e) => {
-          e.stopPropagation();
-          onNavigate(row.original.enrollmentId);
-        }}
+        onClick={() => onNavigate(row.enrollmentId)}
       >
-        {row.original.name}
+        {row.name}
       </span>
     ),
-  }),
-
-  columnHelper.display({
-    id: "enrollment",
-    header: "재원 상태",
-    cell: ({ row }) => (
+  },
+  {
+    key: "enrollment",
+    render: (row: StudentEnrollment) => (
       <MiniLabel
         color={
-          row.original.status === "재원"
+          row.status === "재원"
             ? "green"
-            : row.original.status === "휴원"
+            : row.status === "휴원"
               ? "yellow"
               : "red"
         }
       >
-        {row.original.status}
+        {row.status}
       </MiniLabel>
     ),
-  }),
-
-  columnHelper.display({
-    id: "app",
-    header: "앱 사용",
-    cell: ({ row }) => (
+  },
+  {
+    key: "app",
+    render: (row: StudentEnrollment) => (
       <span className="text-sm whitespace-nowrap">
-        {row.original.isAppUser ? "O" : "X"}
+        {row.isAppUser ? "O" : "X"}
       </span>
     ),
-  }),
-
-  columnHelper.display({
-    id: "lecture",
-    header: "수업",
-    cell: ({ row }) => (
+  },
+  {
+    key: "lecture",
+    render: (row: StudentEnrollment) => (
+      <span className="text-sm whitespace-nowrap">{row.lecture.title}</span>
+    ),
+  },
+  {
+    key: "school",
+    render: (row: StudentEnrollment) => (
       <span className="text-sm whitespace-nowrap">
-        {row.original.lecture.title}
+        {row.school} / {row.grade}
       </span>
     ),
-  }),
-
-  columnHelper.display({
-    id: "school",
-    header: "학교 / 학년",
-    cell: ({ row }) => (
+  },
+  {
+    key: "phoneNumber",
+    render: (row: StudentEnrollment) => (
+      <span className="text-sm whitespace-nowrap">{row.phone}</span>
+    ),
+  },
+  {
+    key: "registeredAt",
+    render: (row: StudentEnrollment) => (
+      <span className="text-sm whitespace-nowrap">{row.registeredAt}</span>
+    ),
+  },
+  {
+    key: "attendance",
+    render: (row: StudentEnrollment) => (
       <span className="text-sm whitespace-nowrap">
-        {row.original.school} / {row.original.grade}
+        {row.attendance.percentage}%
       </span>
     ),
-  }),
-
-  columnHelper.display({
-    id: "phone",
-    header: "연락처",
-    cell: ({ row }) => (
-      <span className="text-sm whitespace-nowrap">{row.original.phone}</span>
+  },
+  {
+    key: "statusSelect",
+    render: (row: StudentEnrollment) => (
+      <SelectBtn
+        className="w-[100px]"
+        value={row.status}
+        placeholder="상태 선택"
+        options={STATUS_SETTING_OPTIONS}
+        onChange={(value) => onStatusChange(row.enrollmentId, value)}
+      />
     ),
-  }),
-
-  columnHelper.display({
-    id: "registeredAt",
-    header: "등록일",
-    cell: ({ row }) => (
-      <span className="text-sm whitespace-nowrap">
-        {row.original.registeredAt}
-      </span>
-    ),
-  }),
-
-  columnHelper.display({
-    id: "attendance",
-    header: "출석률",
-    cell: ({ row }) => (
-      <span className="text-sm whitespace-nowrap">
-        {row.original.attendance.percentage}%
-      </span>
-    ),
-  }),
-
-  columnHelper.display({
-    id: "statusSelect",
-    header: "상태 변경",
-    cell: ({ row }) => (
-      <div onClick={(e) => e.stopPropagation()}>
-        <SelectBtn
-          className="w-[100px]"
-          value={row.original.status}
-          placeholder="상태 선택"
-          options={STATUS_SETTING_OPTIONS}
-        />
-      </div>
-    ),
-  }),
+  },
 ];
