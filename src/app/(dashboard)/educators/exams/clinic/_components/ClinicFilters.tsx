@@ -15,6 +15,10 @@ import { useClinicStore } from "@/stores/clinic.store";
 export function ClinicFilters() {
   const { selectedIds, markAsCompleted } = useClinicStore();
 
+  const handleResetFilters = () => {
+    // TODO: 필터 초기화 로직 연결
+  };
+
   const handleMarkCompleted = () => {
     if (selectedIds.length > 0) {
       markAsCompleted();
@@ -56,6 +60,7 @@ export function ClinicFilters() {
           variant="outline"
           className="h-9 w-9 p-0"
           aria-label="필터 초기화"
+          onClick={handleResetFilters}
         >
           <RefreshCw className="h-4 w-4" />
         </Button>

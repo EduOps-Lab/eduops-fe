@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Bell } from "lucide-react";
 
 import {
@@ -31,10 +32,13 @@ export function NotificationModal({
   onOpenChange,
   students,
 }: NotificationModalProps) {
+  const [message, setMessage] = useState("");
+
   const handleSend = () => {
     // TODO: 알림 전송 로직
-    console.log("알림 전송:", students);
+    console.log("알림 전송:", { students, message });
     onOpenChange(false);
+    setMessage("");
   };
 
   return (
@@ -108,6 +112,7 @@ export function NotificationModal({
                       부모님 연락처: {student.parentPhone}
                     </p>
                   </div>
+                  {/* TODO: 학생별 카카오톡 전송 핸들러 연결 */}
                   <Button variant="secondary" size="default">
                     카카오톡
                   </Button>
@@ -122,6 +127,8 @@ export function NotificationModal({
             <Textarea
               placeholder="전송할 메시지를 입력하세요"
               className="min-h-[120px] resize-none"
+              value={message}
+              onChange={(event) => setMessage(event.target.value)}
             />
           </div>
         </div>
