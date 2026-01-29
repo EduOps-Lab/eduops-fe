@@ -9,13 +9,15 @@ import { GradingStudent } from "@/types/grading";
 type StudentListSidebarProps = {
   students: GradingStudent[];
   selectedStudentId?: string;
-  onSelectStudent?: (studentId: string) => void;
+  onSelectStudentAction?: (studentId: string) => void;
+  onOpenResultModalAction?: () => void;
 };
 
 export function StudentListSidebar({
   students,
   selectedStudentId,
-  onSelectStudent,
+  onSelectStudentAction,
+  onOpenResultModalAction,
 }: StudentListSidebarProps) {
   const isAllSaved =
     students.length > 0 &&
@@ -42,7 +44,7 @@ export function StudentListSidebar({
               className={`cursor-pointer transition-colors ${
                 isSelected ? "bg-primary/10 border-primary" : ""
               }`}
-              onClick={() => onSelectStudent?.(student.id)}
+              onClick={() => onSelectStudentAction?.(student.id)}
             >
               <CardContent className="p-4">
                 <div className="space-y-1">
@@ -59,7 +61,12 @@ export function StudentListSidebar({
       </div>
 
       <div className="space-y-2">
-        <Button className="w-full" size="lg" disabled={!isAllSaved}>
+        <Button
+          className="w-full"
+          size="lg"
+          disabled={!isAllSaved}
+          onClick={onOpenResultModalAction}
+        >
           <Check className="h-4 w-4 mr-2" />
           전체 완료
         </Button>

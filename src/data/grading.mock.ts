@@ -242,3 +242,71 @@ export const mockGradingSummary: GradingSummary = {
   correctRate: 0,
   isPassed: false,
 };
+
+/**
+ * D2 결과(시험 리포트) 모달 UI용 mock
+ * - 기능 연동 전, 디자인 검증/PR 목적
+ */
+export const mockGradingReportOverview = {
+  examDate: "2026-01-13",
+  averageScore: 80,
+  top30AverageScore: 100,
+  maxScore: 100,
+};
+
+export const mockGradingReportStudentRows = [
+  {
+    id: "stu-001",
+    name: "구민지",
+    correctCount: "5/5",
+    score: 100,
+    rank: "1 / 3",
+  },
+  {
+    id: "stu-002",
+    name: "유지현",
+    correctCount: "3/5",
+    score: 60,
+    rank: "3 / 3",
+  },
+  {
+    id: "stu-003",
+    name: "이서윤",
+    correctCount: "4/5",
+    score: 80,
+    rank: "2 / 3",
+  },
+];
+
+export const mockGradingReportQuestionStats = [
+  {
+    questionNumber: 1,
+    correctRate: 100,
+    wrongRate: 0,
+    optionRates: [100, 0, 0, 0, 0],
+  },
+  {
+    questionNumber: 2,
+    correctRate: 67,
+    wrongRate: 33,
+    optionRates: [0, 67, 33, 0, 0],
+  },
+  {
+    questionNumber: 3,
+    correctRate: 100,
+    wrongRate: 0,
+    optionRates: [0, 0, 100, 0, 0],
+  },
+  {
+    questionNumber: 4,
+    correctRate: 67,
+    wrongRate: 33,
+    optionRates: [0, 33, 0, 67, 0],
+  },
+  {
+    questionNumber: 5,
+    correctRate: 67,
+    wrongRate: 33,
+    optionRates: [33, 0, 0, 0, 67],
+  },
+];
