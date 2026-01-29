@@ -95,7 +95,9 @@ export function StudentCreateModal() {
                   placeholder="010-1234-5678"
                 />
                 {errors.phoneNumber && (
-                  <p className="text-xs text-red-500">{errors.phone.message}</p>
+                  <p className="text-xs text-red-500">
+                    {errors.phoneNumber.message}
+                  </p>
                 )}
               </div>
             </div>

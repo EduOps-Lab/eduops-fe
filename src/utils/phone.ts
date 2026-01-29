@@ -7,7 +7,5 @@ export const formatPhoneNumber = (phone: string) => {
     return digits.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
   }
 
-  if (digits.length !== 11) return null;
-
-  return phone;
+  return null;
 };

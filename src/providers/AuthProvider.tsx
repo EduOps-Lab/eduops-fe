@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const { data } = await getSessionAPI();
         setUser(data.user); // 백엔드에서 준 user 정보 저장
       } catch (err: unknown) {
-        console.error(err);
+        console.error(err, "Failed to fetch session");
         setUser(null); // 세션이 없거나 만료됨
       } finally {
         setIsLoading(false);

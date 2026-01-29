@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
@@ -39,11 +39,15 @@ export default function EditProfileModal({
     defaultValues: studentData,
   });
 
-  // 모달 열릴 때 폼 데이터만 reset (state 변경 X)
+  // 이전 모달 상태 추적
+  const prevIsOpenRef = useRef(false);
+  // 모달 열릴 때만 studentData로 폼 초기화
+  // 모달이 열린 상태에서 studentData가 변경되면 편집 중인 내용이 날아갈 수 있기 때문
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !prevIsOpenRef.current) {
       reset(studentData);
     }
+    prevIsOpenRef.current = isOpen;
   }, [isOpen, studentData, reset]);
 
   const handleEditToggle = () => {

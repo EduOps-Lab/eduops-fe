@@ -43,7 +43,6 @@ export default function LoginForm({ selectedRole }: LoginFormProps) {
   return (
     <div className="space-y-6">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {/* 이메일 입력 */}
         <div>
           <label
             htmlFor="email"
@@ -68,7 +67,6 @@ export default function LoginForm({ selectedRole }: LoginFormProps) {
           )}
         </div>
 
-        {/* 비밀번호 입력 */}
         <div>
           <label
             htmlFor="password"
@@ -104,20 +102,18 @@ export default function LoginForm({ selectedRole }: LoginFormProps) {
           )}
         </div>
 
-        {/* 로그인 상태 유지 */}
         <div className="flex items-center">
           <input
-            id=" rememberMe"
+            id="rememberMe"
             type="checkbox"
             {...register("rememberMe")}
             className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
           />
-          <label htmlFor=" rememberMe" className="ml-2 text-sm text-gray-700">
+          <label htmlFor="rememberMe" className="ml-2 text-sm text-gray-700">
             로그인 상태 유지
           </label>
         </div>
 
-        {/* 로그인 버튼 */}
         <button
           type="submit"
           disabled={!isValid || loading}
@@ -133,7 +129,6 @@ export default function LoginForm({ selectedRole }: LoginFormProps) {
         </button>
       </form>
 
-      {/* 구분선 */}
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-gray-300"></div>
@@ -143,7 +138,6 @@ export default function LoginForm({ selectedRole }: LoginFormProps) {
         </div>
       </div>
 
-      {/* 구글 로그인 버튼 */}
       <button
         type="button"
         onClick={handleGoogleLogin}
@@ -171,7 +165,6 @@ export default function LoginForm({ selectedRole }: LoginFormProps) {
         구글로 로그인
       </button>
 
-      {/* 문의 */}
       <div className="text-center text-sm text-gray-600">
         관리자 권한이 필요하신가요?{" "}
         <Link

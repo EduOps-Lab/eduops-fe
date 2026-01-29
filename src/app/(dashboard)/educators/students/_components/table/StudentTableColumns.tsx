@@ -66,15 +66,16 @@ export const createStudentColumns = ({
     id: "name",
     header: "이름",
     cell: ({ row }) => (
-      <span
-        className="font-medium whitespace-nowrap text-sm cursor-pointer hover:text-primary hover:underline"
+      <button
+        type="button"
+        className="font-medium whitespace-nowrap text-sm cursor-pointer hover:text-primary hover:underline bg-transparent border-none p-0 text-left"
         onClick={(e) => {
           e.stopPropagation();
           onNavigate(row.original.enrollmentId);
         }}
       >
         {row.original.name}
-      </span>
+      </button>
     ),
   }),
 

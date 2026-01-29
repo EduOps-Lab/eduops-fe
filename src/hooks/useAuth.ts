@@ -88,10 +88,6 @@ export function useAuth() {
           throw new Error("알 수 없는 사용자 타입입니다.");
       }
 
-      if (res.data?.user) {
-        setUser(res.data.user);
-      }
-
       alert("회원가입 성공!");
 
       // 회원가입 후 역할별 로그인 페이지 이동
@@ -140,7 +136,7 @@ export function useAuth() {
       }
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
-        alert("로그인 실패!");
+        alert(err.response?.data?.message || "로그인 실패!");
       } else {
         alert("알 수 없는 에러가 발생했습니다.");
       }

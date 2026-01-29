@@ -51,7 +51,7 @@ export default function RegisterForm({
     setError,
     trigger,
     getValues,
-    reset,
+    setValue,
     formState: { errors, isValid },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerFormSchema),
@@ -85,13 +85,13 @@ export default function RegisterForm({
         alert("전화번호 인증 완료!");
       } else {
         setPhoneVerified(false);
-        reset({ phoneNumber: "" });
+        setValue("phoneNumber", "");
         alert("전화번호 인증에 실패했습니다.");
       }
     } catch (error) {
       console.error(error);
       setPhoneVerified(false);
-      reset({ phoneNumber: "" });
+      setValue("phoneNumber", "");
       alert("인증 중 오류가 발생했습니다.");
     } finally {
       setPhoneLoading(false);
@@ -223,7 +223,7 @@ export default function RegisterForm({
           </div>
 
           {errors.phoneNumber && (
-            <p id="phone-error" className="mt-1 text-sm text-red-600">
+            <p id="phoneNumber-error" className="mt-1 text-sm text-red-600">
               {errors.phoneNumber.message}
             </p>
           )}
