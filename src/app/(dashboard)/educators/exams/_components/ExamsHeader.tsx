@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import Title from "@/components/common/header/Title";
 
@@ -18,8 +20,8 @@ export function ExamsHeader() {
         <Button variant="outline" className="rounded-full">
           시험 등록/수정
         </Button>
-        <Button variant="outline" className="rounded-full">
-          클리닉
+        <Button variant="outline" className="rounded-full" asChild>
+          <Link href="/educators/exams/clinic">클리닉</Link>
         </Button>
         <Button className="rounded-full">성적표 발송</Button>
       </div>
