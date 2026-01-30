@@ -165,10 +165,9 @@ export function useAuth() {
 
       setUser(null);
 
-      router.refresh();
       router.replace(targetPath);
     } catch (err) {
-      console.error("로그아웃 실패:", err);
+      console.error("로그아웃 처리 중 문제가 발생했습니다.", err);
     } finally {
       setLoading(false);
     }

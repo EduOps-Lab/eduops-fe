@@ -118,14 +118,14 @@ export default function LoginForm({ selectedRole }: LoginFormProps) {
           type="submit"
           disabled={!isValid || loading}
           className={`w-full py-3 px-4 rounded-lg font-medium transition-colors ${
-            !isValid
+            !isValid || loading
               ? "bg-gray-300 text-gray-500 cursor-not-allowed"
               : "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
           }`}
           aria-label="로그인"
           aria-disabled={!isValid || loading}
         >
-          {loading ? "로그인 중..." : "로그인"}
+          {loading ? "로그인 중..." : "로그인"}{" "}
         </button>
       </form>
 
