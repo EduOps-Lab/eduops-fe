@@ -24,7 +24,7 @@ export function ReportPreview() {
     const student = students.find((s) => s.id === selectedStudentId);
     if (!exam || !student) return null;
     return {
-      id: student.examId,
+      id: student.id,
       studentId: student.id,
       examName: exam.examName,
       examDate: exam.examDate,
