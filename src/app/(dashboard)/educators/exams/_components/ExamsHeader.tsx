@@ -17,13 +17,15 @@ export function ExamsHeader() {
         <Button variant="secondary" className="rounded-full">
           시험 관리
         </Button>
-        <Button variant="outline" className="rounded-full">
-          시험 등록/수정
+        <Button variant="outline" className="rounded-full" asChild>
+          <Link href="/educators/exams/create">시험 등록/수정</Link>
         </Button>
         <Button variant="outline" className="rounded-full" asChild>
           <Link href="/educators/exams/clinic">클리닉</Link>
         </Button>
-        <Button className="rounded-full">성적표 발송</Button>
+        <Button className="rounded-full" asChild>
+          <Link href="/educators/exams/report">성적표 발송</Link>
+        </Button>
       </div>
     </div>
   );

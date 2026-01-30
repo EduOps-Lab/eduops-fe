@@ -5,15 +5,28 @@ import { Bell } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import Title from "@/components/common/header/Title";
+import {
+  KakaoNotificationModal,
+  NotificationRecipient,
+} from "@/components/common/modals/KakaoNotificationModal";
 import { useClinicStore } from "@/stores/clinic.store";
-
-import { NotificationModal } from "../_modals/NotificationModal";
 
 export function ClinicHeader() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { students, selectedIds } = useClinicStore();
 
-  const selectedStudents = students.filter((s) => selectedIds.includes(s.id));
+  // ClinicStudent를 NotificationRecipient로 변환
+  const selectedRecipients: NotificationRecipient[] = students
+    .filter((s) => selectedIds.includes(s.id))
+    .map((s) => ({
+      id: s.id,
+      name: s.name,
+      phone: s.phone,
+      parentPhone: s.parentPhone,
+      examName: s.examName,
+      score: s.score,
+      className: s.class,
+    }));
 
   const handleOpenModal = () => {
     if (selectedIds.length > 0) {
@@ -38,10 +51,12 @@ export function ClinicHeader() {
         </Button>
       </div>
 
-      <NotificationModal
+      <KakaoNotificationModal
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
-        students={selectedStudents}
+        recipients={selectedRecipients}
+        title="클리닉 알림 발송"
+        subtitle="클리닉 대상자 알림"
       />
     </>
   );
