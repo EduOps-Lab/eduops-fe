@@ -92,14 +92,14 @@ export const StudentTableData = ({
     key: "school",
     render: (row: StudentEnrollment) => (
       <span className="text-sm whitespace-nowrap">
-        {row.school} / {row.grade}
+        {row.school} / {row.schoolYear}
       </span>
     ),
   },
   {
     key: "phoneNumber",
     render: (row: StudentEnrollment) => (
-      <span className="text-sm whitespace-nowrap">{row.phone}</span>
+      <span className="text-sm whitespace-nowrap">{row.phoneNumber}</span>
     ),
   },
   {
