@@ -43,6 +43,10 @@ export function TalkNotificationModal() {
     return studentCount;
   };
 
+  const clearSelection = useStudentSelectionStore(
+    (state) => state.resetSelection
+  );
+
   const handleSubmit = () => {
     console.log({
       selectedStudentIds,
@@ -52,6 +56,7 @@ export function TalkNotificationModal() {
     });
     // TODO: API 호출
     resetForm();
+    clearSelection();
     closeModal();
   };
 
@@ -73,7 +78,6 @@ export function TalkNotificationModal() {
         if (!open) handleClose();
       }}
     >
-      {" "}
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center gap-2 mb-1">
@@ -136,12 +140,12 @@ export function TalkNotificationModal() {
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm mb-1">{studentData.student.name}</p>
+                      <p className="text-sm mb-1">{studentData.name}</p>
                       <p className="text-xs text-muted-foreground mb-0.5">
-                        연락처: {studentData.student.phone}
+                        연락처: {studentData.phone}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        부모님 연락처: {studentData.parent.phone}
+                        부모님 연락처: {studentData.parentPhone}
                       </p>
                     </div>
                     <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary">

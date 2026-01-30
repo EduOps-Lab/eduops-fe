@@ -14,14 +14,12 @@ export const fetchStudentsAPI = async (
 
   if (query.keyword) {
     result = result.filter(
-      (s) =>
-        s.student.name.includes(query.keyword) ||
-        s.student.phone.includes(query.keyword)
+      (s) => s.name.includes(query.keyword) || s.phone.includes(query.keyword)
     );
   }
 
   if (query.grade) {
-    result = result.filter((s) => s.student.grade === query.grade);
+    result = result.filter((s) => s.grade === query.grade);
   }
 
   if (query.status) {

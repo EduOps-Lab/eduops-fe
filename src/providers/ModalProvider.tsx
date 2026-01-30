@@ -27,8 +27,6 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
 
   const closeModal = () => {
     setIsOpen(false);
-    // 애니메이션 후 컨텐츠 제거 (선택사항)
-    setTimeout(() => setModalContent(null), 200);
   };
 
   // Context에 전달할 값

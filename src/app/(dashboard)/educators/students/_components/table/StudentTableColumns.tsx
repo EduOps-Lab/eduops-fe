@@ -12,12 +12,16 @@ export type StudentTableColumn = {
   render: (row: StudentEnrollment) => React.ReactNode;
 };
 
-export const StudentTableColumns = ({
+export const StudentTableData = ({
   selectedStudents,
   onSelectStudent,
+  onStatusChange,
+  onNavigate,
 }: {
   selectedStudents: string[];
   onSelectStudent: (id: string, checked: boolean) => void;
+  onStatusChange: (id: string, status: string) => void;
+  onNavigate: (enrollmentId: string) => void;
 }): StudentTableColumn[] => [
   {
     key: "select",
@@ -35,8 +39,8 @@ export const StudentTableColumns = ({
     key: "profile",
     render: (row: StudentEnrollment) => (
       <Image
-        src={row.student.profileImage ?? noProfileImage.src}
-        alt={row.student.name}
+        src={row.profileImage || noProfileImage.src}
+        alt={row.name}
         width={32}
         height={32}
         className="rounded-full"
@@ -46,8 +50,11 @@ export const StudentTableColumns = ({
   {
     key: "name",
     render: (row: StudentEnrollment) => (
-      <span className="font-medium whitespace-nowrap text-sm">
-        {row.student.name}
+      <span
+        className="font-medium whitespace-nowrap text-sm cursor-pointer hover:text-primary hover:underline"
+        onClick={() => onNavigate(row.enrollmentId)}
+      >
+        {row.name}
       </span>
     ),
   },
@@ -71,7 +78,7 @@ export const StudentTableColumns = ({
     key: "app",
     render: (row: StudentEnrollment) => (
       <span className="text-sm whitespace-nowrap">
-        {row.student.isAppUser ? "O" : "X"}
+        {row.isAppUser ? "O" : "X"}
       </span>
     ),
   },
@@ -85,14 +92,14 @@ export const StudentTableColumns = ({
     key: "school",
     render: (row: StudentEnrollment) => (
       <span className="text-sm whitespace-nowrap">
-        {row.student.school} / {row.student.grade}
+        {row.school} / {row.grade}
       </span>
     ),
   },
   {
-    key: "phone",
+    key: "phoneNumber",
     render: (row: StudentEnrollment) => (
-      <span className="text-sm whitespace-nowrap">{row.student.phone}</span>
+      <span className="text-sm whitespace-nowrap">{row.phone}</span>
     ),
   },
   {
@@ -117,6 +124,7 @@ export const StudentTableColumns = ({
         value={row.status}
         placeholder="상태 선택"
         options={STATUS_SETTING_OPTIONS}
+        onChange={(value) => onStatusChange(row.enrollmentId, value)}
       />
     ),
   },

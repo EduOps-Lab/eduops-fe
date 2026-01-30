@@ -116,7 +116,6 @@ export function ExamInfoSection({
               <Input
                 id="exam-date"
                 type="date"
-                placeholder="연도. 월. 일."
                 {...register("examDate")}
                 disabled={disabled}
               />

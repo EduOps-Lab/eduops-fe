@@ -1,14 +1,12 @@
-export const getCreateStudentFormDefaults = () => ({
-  studentName: "",
-  studentPhone: "",
-  school: "",
-  grade: "",
-  parentName: "",
-  parentPhone: "",
-  assignedClass: "",
-  registrationDate: new Date().toISOString().split("T")[0],
-});
+import {
+  AttendanceRegisterFormData,
+  ClassChangeFormData,
+  EditProfileFormData,
+  StudentCreateFormData,
+} from "@/types/students.type";
+import { getTodayISODate, getTodayYMD } from "@/utils/date";
 
+// select 버튼 options
 export const GRADE_SELECTING_OPTIONS = [
   { label: "고3", value: "고3" },
   { label: "고2", value: "고2" },
@@ -46,3 +44,46 @@ export const STUDENTS_TABLE_COLUMNS = [
   { key: "attendance", label: "출결율" },
   { key: "action", label: "상태" },
 ];
+
+export const ATTENDANCE_STATUS_OPTIONS = [
+  { label: "출석", value: "PRESENT" },
+  { label: "결석", value: "ABSENT" },
+  { label: "조퇴", value: "EARLY_LEAVE" },
+  { label: "지각", value: "LATE" },
+];
+
+export const getCreateStudentFormDefaults = (): StudentCreateFormData => {
+  return {
+    name: "",
+    phone: "",
+    school: "",
+    grade: "",
+    parentPhone: "",
+    assignedClass: "",
+    registrationDate: getTodayYMD(),
+    memo: "",
+  };
+};
+
+export const CLASS_CHANGE_FORM_DEFAULTS: ClassChangeFormData = {
+  assignedClass: "",
+  memo: "",
+};
+
+export const EDIT_PROFILE_FORM_DEFAULTS: EditProfileFormData = {
+  name: "",
+  school: "",
+  grade: "",
+  phone: "",
+  email: "",
+  parentPhone: "",
+};
+
+export const getAttendanceRegisterFormDefaults =
+  (): AttendanceRegisterFormData => {
+    return {
+      date: getTodayISODate(),
+      status: "",
+      memo: "",
+    };
+  };
