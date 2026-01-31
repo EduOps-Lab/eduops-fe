@@ -1,35 +1,70 @@
-import { StudentEnrollment, StudentListQuery } from "@/types/students.type";
-import { mockStudentEnrollments } from "@/data/students.mock";
+import {
+  ApiResponse,
+  EnrollmentListResponse,
+  EnrollmentDetailResponse,
+  AttendanceListWithStatsResponse,
+  StudentListQuery,
+  UpdateStudentRequest,
+  CreateAttendanceRequest,
+  Attendance,
+  Student,
+} from "@/types/students.type";
 
-// 임시 학생 목록 조회 API
-export const fetchStudentsAPI = async (
-  query: StudentListQuery
-): Promise<StudentEnrollment[]> => {
-  console.log("학생 목록 조회 쿼리:", query);
+import { axiosClient } from "./axiosClient";
 
-  await new Promise((resolve) => setTimeout(resolve, 500));
+// 전체 수강생 목록 조회
+export const getEnrollmentsAPI = (query?: StudentListQuery) =>
+  axiosClient
+    .get<ApiResponse<EnrollmentListResponse>>("/enrollments", { params: query })
+    .then((res) => res.data);
 
-  // 실제 서버 대신 mock 필터링
-  let result = [...mockStudentEnrollments];
+// 수강생 상세 조회
+export const getEnrollmentByIdAPI = (id: string) =>
+  axiosClient
+    .get<ApiResponse<EnrollmentDetailResponse>>(`/enrollments/${id}`)
+    .then((res) => res.data);
 
-  if (query.keyword) {
-    result = result.filter(
-      (s) =>
-        s.name.includes(query.keyword) || s.phoneNumber.includes(query.keyword)
-    );
-  }
+// 수강생 정보 수정
+export const updateEnrollmentAPI = (id: string, data: UpdateStudentRequest) =>
+  axiosClient
+    .patch<
+      ApiResponse<{ enrollment: Partial<Student> }>
+    >(`/enrollments/${id}`, data)
+    .then((res) => res.data);
 
-  if (query.schoolYear) {
-    result = result.filter((s) => s.schoolYear === query.schoolYear);
-  }
+// 수강생 삭제
+export const deleteEnrollmentAPI = (id: string) =>
+  axiosClient
+    .delete<ApiResponse<null>>(`/enrollments/${id}`)
+    .then((res) => res.data);
 
-  if (query.status) {
-    result = result.filter((s) => s.status === query.status);
-  }
+// 특정 수강생 출결 목록 조회
+export const getAttendancesAPI = (id: string) =>
+  axiosClient
+    .get<
+      ApiResponse<AttendanceListWithStatsResponse>
+    >(`/enrollments/${id}/attendances`)
+    .then((res) => res.data);
 
-  if (query.lectureId) {
-    result = result.filter((s) => s.lecture.id === query.lectureId);
-  }
+// 특정 수강생 출결 등록
+export const createAttendanceAPI = (
+  id: string,
+  data: CreateAttendanceRequest
+) =>
+  axiosClient
+    .post<
+      ApiResponse<{ attendance: Attendance }>
+    >(`/enrollments/${id}/attendances`, data)
+    .then((res) => res.data);
 
-  return result;
-};
+// 수강생 출결 정정/수정
+export const updateAttendanceAPI = (
+  id: string,
+  attendanceId: string,
+  data: Partial<Attendance>
+) =>
+  axiosClient
+    .patch<
+      ApiResponse<{ attendance: Attendance }>
+    >(`/enrollments/${id}/attendances/${attendanceId}`, data)
+    .then((res) => res.data);
