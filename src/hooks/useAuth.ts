@@ -10,7 +10,8 @@ import {
   signoutAPI,
   signupAssistantAPI,
   signupInstructorAPI,
-  signupLearnerAPI,
+  signupParentAPI,
+  signupStudentAPI,
 } from "@/services/auth.service";
 import {
   LoginUser,
@@ -69,7 +70,7 @@ export function useAuth() {
           break;
 
         case "STUDENT":
-          res = await signupLearnerAPI({
+          res = await signupStudentAPI({
             ...basePayload,
             userType: "STUDENT",
             school: data.school,
@@ -78,7 +79,7 @@ export function useAuth() {
           break;
 
         case "PARENT":
-          res = await signupLearnerAPI({
+          res = await signupParentAPI({
             ...basePayload,
             userType: "PARENT",
           } as SignupParentUser);
@@ -97,14 +98,6 @@ export function useAuth() {
         userType: data.userType,
         rememberMe: false,
       });
-
-      // 자동 로그인 후 역할별 로그인 페이지 이동
-      const targetPath =
-        data.userType === "INSTRUCTOR" || data.userType === "ASSISTANT"
-          ? "/educators"
-          : "/learners";
-
-      router.push(targetPath);
 
       return res.data;
     } catch (err: unknown) {

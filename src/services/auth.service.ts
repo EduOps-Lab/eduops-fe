@@ -50,10 +50,12 @@ export const signupAssistantAPI = (data: SignupAssistantUser) => {
   return axiosClient.post("/auth/assistant/signup", data);
 };
 
-export const signupLearnerAPI = (
-  data: SignupStudentUser | SignupParentUser
-) => {
+export const signupStudentAPI = (data: SignupStudentUser) => {
   return axiosClientSVC.post("/auth/student/signup", data);
+};
+
+export const signupParentAPI = (data: SignupParentUser) => {
+  return axiosClientSVC.post("/auth/parent/signup", data);
 };
 
 // 로그인 API ---------------------
