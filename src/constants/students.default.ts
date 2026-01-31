@@ -1,10 +1,10 @@
 import {
   AttendanceRegisterFormData,
   ClassChangeFormData,
-  EditProfileFormData,
+  EditProfileFormDataType,
   StudentCreateFormData,
 } from "@/types/students.type";
-import { getTodayISODate, getTodayYMD } from "@/utils/date";
+import { getTodayYMD } from "@/utils/date";
 
 // select 버튼 options
 export const GRADE_SELECTING_OPTIONS = [
@@ -61,8 +61,8 @@ export const ATTENDANCE_STATUS_OPTIONS = [
 
 export const getCreateStudentFormDefaults = (): StudentCreateFormData => {
   return {
-    name: "",
-    phoneNumber: "",
+    studentName: "",
+    studentPhone: "",
     school: "",
     schoolYear: "",
     parentPhone: "",
@@ -77,19 +77,21 @@ export const CLASS_CHANGE_FORM_DEFAULTS: ClassChangeFormData = {
   memo: "",
 };
 
-export const EDIT_PROFILE_FORM_DEFAULTS: EditProfileFormData = {
-  name: "",
+export const EDIT_PROFILE_FORM_DEFAULTS: EditProfileFormDataType = {
+  id: "",
+  studentName: "",
   school: "",
   schoolYear: "",
-  phoneNumber: "",
-  email: "",
+  studentPhone: "",
   parentPhone: "",
+  email: "",
+  memo: "",
 };
 
 export const getAttendanceRegisterFormDefaults =
   (): AttendanceRegisterFormData => {
     return {
-      date: getTodayISODate(),
+      date: getTodayYMD(),
       status: "",
       memo: "",
     };

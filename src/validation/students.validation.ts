@@ -2,10 +2,10 @@ import z from "zod";
 
 // 공통 학생 기본 정보
 const studentBaseSchema = z.object({
-  name: z.string().trim().min(1, "학생 이름을 입력해주세요"),
+  studentName: z.string().trim().min(1, "학생 이름을 입력해주세요"),
   school: z.string().trim().min(1, "학교명을 입력해주세요"),
   schoolYear: z.string().min(1, "학년을 입력해주세요"),
-  phoneNumber: z
+  studentPhone: z
     .string()
     .trim()
     .min(1, "학생 연락처를 입력해주세요")

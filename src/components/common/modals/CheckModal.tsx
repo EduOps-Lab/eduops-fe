@@ -48,12 +48,17 @@ export const CheckModal = ({
         </DialogHeader>
 
         <DialogFooter className="p-6 pt-2 flex flex-row justify-end gap-2">
-          <Button variant="outline" onClick={handleClose}>
+          <Button
+            variant="outline"
+            className="cursor-pointer"
+            onClick={handleClose}
+          >
             {cancelText}
           </Button>
 
           <Button
             variant="default"
+            className="cursor-pointer"
             onClick={() => {
               onConfirm();
               handleClose();
