@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,7 +15,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { mockLectures } from "@/data/lectures.mock";
-import { mockStudentEnrollments } from "@/data/students.mock";
 import { useModal } from "@/providers/ModalProvider";
 import { useStudentSelectionStore } from "@/stores/studentsList.store";
 import SelectBtn from "@/components/common/button/SelectBtn";
@@ -24,36 +24,20 @@ export function StudentChangeModal() {
   const [targetLecture, setTargetLecture] = useState("");
   const [memo, setMemo] = useState("");
 
-  // 선택된 학생들 가져오기
-  const selectedStudentIds = useStudentSelectionStore(
-    (state) => state.selectedStudentIds
-  );
-
-  // 선택된 학생 제거
-  const removeStudent = useStudentSelectionStore(
-    (state) => state.removeStudent
-  );
-
-  // 선택된 학생 수
-  const selectedStudents = mockStudentEnrollments.filter((s) =>
-    selectedStudentIds.includes(s.enrollmentId)
-  );
-
-  // 선택된 학생 초기화
-  const clearSelection = useStudentSelectionStore(
-    (state) => state.resetSelection
-  );
+  const { selectedStudents, removeStudent, resetSelection } =
+    useStudentSelectionStore();
 
   const handleSubmit = () => {
-    console.log({
-      studentIds: selectedStudentIds,
+    const payload = {
+      studentIds: selectedStudents.map((s) => s.enrollmentId),
       targetLecture,
       memo,
-    });
+    };
+    console.log("제출 데이터:", payload);
 
-    // TODO: API 호출
+    //TODO: API 호출
     resetForm();
-    clearSelection();
+    resetSelection(); // 작업 완료 후 선택 초기화
     closeModal();
   };
 
@@ -74,7 +58,7 @@ export function StudentChangeModal() {
           <div className="text-xs text-muted-foreground mb-1">수업 이동</div>
           <DialogTitle className="text-xl">선택 학생 수업 변경</DialogTitle>
           <DialogDescription>
-            이동할 학생을 선택하고 새로운 수업을 지정하세요
+            선택한 학생들을 새로운 수업으로 이동시킵니다.
           </DialogDescription>
         </DialogHeader>
 
@@ -104,7 +88,8 @@ export function StudentChangeModal() {
                     <div className="flex-1">
                       <p className="text-sm font-medium">{student.name}</p>
                       <p className="text-xs text-muted-foreground">
-                        현재 수업: {student.lecture.title}
+                        {/* TODO: 수업 관리 API 연동 후 수정 */}
+                        현재 수업: {student.lectureTitle}
                       </p>
                     </div>
                     <button
@@ -113,7 +98,7 @@ export function StudentChangeModal() {
                       className="px-2 py-1 hover:bg-red-100 rounded"
                       onClick={() => removeStudent(student.enrollmentId)}
                     >
-                      X
+                      <X className="w-4 h-4" />
                     </button>
                   </div>
                 ))

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Bell } from "lucide-react";
+import { Bell, X } from "lucide-react";
+import { DialogDescription } from "@radix-ui/react-dialog";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,7 +15,6 @@ import {
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { mockStudentEnrollments } from "@/data/students.mock";
 import SelectBtn from "@/components/common/button/SelectBtn";
 import { useModal } from "@/providers/ModalProvider";
 import { useStudentSelectionStore } from "@/stores/studentsList.store";
@@ -27,15 +27,12 @@ export function TalkNotificationModal() {
   const [sendTarget, setSendTarget] = useState<SendTarget>("all");
   const [messageContent, setMessageContent] = useState("");
 
-  // 선택된 학생들 가져오기
-  const selectedStudentIds = useStudentSelectionStore(
-    (state) => state.selectedStudentIds
-  );
-
-  // 선택된 학생 및 학부모의 수
-  const selectedStudents = mockStudentEnrollments.filter((s) =>
-    selectedStudentIds.includes(s.enrollmentId)
-  );
+  const {
+    selectedStudents,
+    selectedStudentIds,
+    removeStudent,
+    resetSelection,
+  } = useStudentSelectionStore();
 
   const getExpectedRecipients = () => {
     const studentCount = selectedStudents.length;
@@ -43,20 +40,17 @@ export function TalkNotificationModal() {
     return studentCount;
   };
 
-  const clearSelection = useStudentSelectionStore(
-    (state) => state.resetSelection
-  );
-
   const handleSubmit = () => {
     console.log({
-      selectedStudentIds,
+      studentIds: selectedStudentIds, // API 전송용 ID 배열
       sendChannel,
       sendTarget,
       messageContent,
     });
+
     // TODO: API 호출
     resetForm();
-    clearSelection();
+    resetSelection();
     closeModal();
   };
 
@@ -89,6 +83,9 @@ export function TalkNotificationModal() {
           <DialogTitle className="text-xl flex items-center gap-2">
             알림톡 전송
           </DialogTitle>
+          <DialogDescription>
+            선택한 학생에게 알림톡을 전송합니다.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">
@@ -116,8 +113,8 @@ export function TalkNotificationModal() {
                     placeholder="발송 대상 선택"
                     options={[
                       { label: "전체", value: "all" },
-                      { label: "학생", value: "student" },
-                      { label: "학부모", value: "parent" },
+                      { label: "학생만", value: "student" },
+                      { label: "학부모만", value: "parent" },
                     ]}
                     onChange={(value) => setSendTarget(value as SendTarget)}
                   />
@@ -129,31 +126,46 @@ export function TalkNotificationModal() {
             </div>
           </div>
 
-          {/* 대상 학생 정보 */}
           <div>
-            <Label>대상 학생 정보</Label>
+            <Label>대상 학생 정보 ({selectedStudents.length}명)</Label>
             <div className="border rounded-lg p-4 space-y-2 max-h-[200px] overflow-y-auto">
-              {selectedStudents.map((studentData) => (
-                <div
-                  key={studentData.enrollmentId}
-                  className="space-y-1 pb-2 border-b last:border-b-0"
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm mb-1">{studentData.name}</p>
-                      <p className="text-xs text-muted-foreground mb-0.5">
-                        연락처: {studentData.phoneNumber}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        부모님 연락처: {studentData.parentPhone}
-                      </p>
-                    </div>
-                    <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
-                      {sendChannel === "kakao" ? "카카오톡" : "SMS"}
-                    </span>
-                  </div>
+              {selectedStudents.length === 0 ? (
+                <div className="p-8 text-center text-sm text-muted-foreground">
+                  선택된 학생이 없습니다.
                 </div>
-              ))}
+              ) : (
+                selectedStudents.map((student) => (
+                  <div
+                    key={student.enrollmentId}
+                    className="relative space-y-1 pb-2 border-b last:border-b-0"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm mb-1">{student.name}</p>
+                        <p className="text-xs text-muted-foreground mb-0.5">
+                          학생 연락처 | {student.phoneNumber}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          부모님 연락처 | {student.parentPhone}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
+                          {sendChannel === "kakao" ? "카카오톡" : "SMS"}
+                        </span>
+                        <button
+                          type="button"
+                          aria-label={`학생 ${student.name} 삭제`}
+                          className="px-2 py-1 hover:bg-red-100 rounded"
+                          onClick={() => removeStudent(student.enrollmentId)}
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
           <div>
