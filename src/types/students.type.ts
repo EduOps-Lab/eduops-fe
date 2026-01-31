@@ -21,6 +21,11 @@ export type AttendanceRegisterFormData = z.infer<
   typeof AttendanceRegisterSchema
 >;
 
+export type EditProfileFormDataType = EditProfileFormData & {
+  id: string;
+  memo?: string | null;
+};
+
 // 서버 응답 공통 포맷
 export type ApiResponse<T> = {
   status: "success" | "error";

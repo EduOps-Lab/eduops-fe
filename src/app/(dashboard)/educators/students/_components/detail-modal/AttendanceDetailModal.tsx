@@ -6,18 +6,31 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { useModal } from "@/providers/ModalProvider";
-import { StudentEnrollment } from "@/types/students.type";
+import { Student } from "@/types/students.type";
+import { useEnrollmentAttendances } from "@/hooks/useEnrollment";
+import { formatYMDFromISO } from "@/utils/date";
 
 import AttendanceDetailTable from "../table/AttendanceDetailTable";
 
 type AttendanceDetailModalProps = {
-  studentData: StudentEnrollment;
+  studentData: Student;
 };
 
 export default function AttendanceDetailModal({
   studentData,
 }: AttendanceDetailModalProps) {
   const { isOpen, closeModal } = useModal();
+
+  // 수강생 출결 상세 조회
+  const { data: attendanceData } = useEnrollmentAttendances(studentData.id);
+  const attendanceRecords = attendanceData?.attendances
+    ? [...attendanceData.attendances]
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .map((record) => ({
+          ...record,
+          date: formatYMDFromISO(record.date) ?? record.date,
+        }))
+    : [];
 
   const handleClose = () => {
     closeModal();
@@ -32,9 +45,7 @@ export default function AttendanceDetailModal({
         </DialogHeader>
 
         <div className="mt-2 border rounded-md p-2 max-h-[400px] overflow-y-auto">
-          <AttendanceDetailTable
-            records={studentData?.attendance?.records ?? []}
-          />
+          <AttendanceDetailTable records={attendanceRecords ?? []} />
         </div>
       </DialogContent>
     </Dialog>

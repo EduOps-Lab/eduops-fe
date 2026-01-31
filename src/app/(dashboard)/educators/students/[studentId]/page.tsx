@@ -7,10 +7,17 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Title from "@/components/common/header/Title";
-import { mockStudentEnrollments } from "@/data/students.mock";
 import { mockLectures } from "@/data/lectures.mock";
 import noProfile from "@/assets/images/no-profile.jpg";
 import { useModal } from "@/providers/ModalProvider";
+import {
+  useEnrollmentAttendances,
+  useEnrollmentDetail,
+} from "@/hooks/useEnrollment";
+import EmptyState from "@/components/common/EmptyState";
+import { phoneNumberFormatter } from "@/utils/phone";
+import StatusLabel from "@/components/common/label/StatusLabel";
+import { EditProfileFormDataType } from "@/types/students.type";
 
 import EditProfileModal from "../_components/detail-modal/EditProfileModal";
 import AttendanceDetailModal from "../_components/detail-modal/AttendanceDetailModal";
@@ -25,26 +32,42 @@ export default function StudentDetailPage() {
 
   const [visibleLectures, setVisibleLectures] = useState(6);
 
-  // 학생 데이터 조회
-  const studentData = mockStudentEnrollments.find(
-    (enrollment) => enrollment.enrollmentId === studentId
-  );
+  // 학생 상세 데이터 조회
+  const {
+    data: studentData,
+    isPending,
+    isError,
+  } = useEnrollmentDetail(studentId);
 
-  if (!studentData) {
+  // 학생 출결 통계 조회
+  const {
+    data: attendanceData,
+    isPending: isAttendancePending,
+    isError: isAttendanceError,
+  } = useEnrollmentAttendances(studentId);
+
+  const attendanceStats = attendanceData?.stats;
+
+  if (isPending || isAttendancePending) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen px-8 py-8">
-        <p>학생 정보를 찾을 수 없습니다.</p>
-        <Button onClick={() => router.back()} className="mt-4 cursor-pointer">
-          돌아가기
-        </Button>
+      <div className="flex items-center justify-center h-screen">
+        로딩 중...
       </div>
+    );
+  }
+  if (isError || isAttendanceError || !studentData) {
+    return (
+      <EmptyState
+        message="학생 정보를 불러올 수 없습니다."
+        showBackButton={true}
+      />
     );
   }
 
   // 최근 30일 출결 통계
-  const lateCount = studentData.attendance.summary.LATE || 0;
-  const absentCount = studentData.attendance.summary.ABSENT || 0;
-  const attendanceRate = studentData.attendance.percentage;
+  const lateCount = attendanceStats?.lateCount || 0;
+  const absentCount = attendanceStats?.absentCount || 0;
+  const attendanceRate = attendanceStats?.attendanceRate || 0;
 
   // 수강 중인 수업 목록 (임시로 mockLectures 사용)
   const enrolledLectures = mockLectures.slice(0, 13);
@@ -69,7 +92,7 @@ export default function StudentDetailPage() {
               <div className="shrink-0">
                 <Image
                   src={studentData.profileImage || noProfile}
-                  alt={studentData.name}
+                  alt={"학생 프로필 이미지"}
                   width={120}
                   height={120}
                   className="rounded-lg object-cover"
@@ -79,23 +102,29 @@ export default function StudentDetailPage() {
               {/* 학생 정보 */}
               <div className="flex-1 space-y-3">
                 <div className="flex flex-col">
-                  <h2 className="text-2xl font-bold">
-                    {studentData.name}
+                  <h2 className="text-2xl font-bold flex items-center gap-2">
+                    {studentData.studentName}
                     <span className="text-sm text-muted-foreground ml-2">
-                      | {studentData.isAppUser ? "앱 사용자" : "미등록"}
+                      {studentData.appStudentId ? (
+                        <StatusLabel color="green">앱 사용자</StatusLabel>
+                      ) : (
+                        <StatusLabel color="red">미등록</StatusLabel>
+                      )}
                     </span>
                   </h2>
                   <p className="text-sm text-muted-foreground mt-1">
-                    🎓 {studentData.school} · {studentData.schoolYear}
+                    🎓 학교 | {studentData.school} · {studentData.schoolYear}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    📱 {studentData.phoneNumber}
+                    📱 연락처 |{" "}
+                    {phoneNumberFormatter(studentData.studentPhone || "")}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    ✉️ {studentData.email}
+                    ✉️ 이메일 | {studentData.email || "-"}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    👨‍👩‍👦 학부모 연락처: {studentData.parentPhone}
+                    👨‍👩‍👦 학부모 |{" "}
+                    {phoneNumberFormatter(studentData.parentPhone || "")}
                   </p>
                 </div>
               </div>
@@ -105,7 +134,11 @@ export default function StudentDetailPage() {
                 className="cursor-pointer"
                 variant="outline"
                 onClick={() =>
-                  openModal(<EditProfileModal studentData={studentData} />)
+                  openModal(
+                    <EditProfileModal
+                      studentData={studentData as EditProfileFormDataType}
+                    />
+                  )
                 }
               >
                 정보 수정

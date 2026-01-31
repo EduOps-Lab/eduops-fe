@@ -8,9 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AttendanceStatus, StudentEnrollment } from "@/types/students.type";
-
-type AttendanceRecord = StudentEnrollment["attendance"]["records"][number];
+import { AttendanceStatus, Attendance } from "@/types/students.type";
 
 const STATUS_LABEL: Record<AttendanceStatus, string> = {
   PRESENT: "출석",
@@ -29,30 +27,32 @@ const STATUS_COLOR: Record<AttendanceStatus, string> = {
 type AttendanceTableColumn = {
   key: string;
   label: string;
-  render: (row: AttendanceRecord) => React.ReactNode;
+  render: (row: Attendance) => React.ReactNode;
 };
 
 const ATTENDANCE_TABLE_COLUMNS: AttendanceTableColumn[] = [
   {
     key: "date",
     label: "수업 일자",
-    render: (row: AttendanceRecord) => (
+    render: (row: Attendance) => (
       <span className="text-sm whitespace-nowrap">{row.date}</span>
     ),
   },
   {
     key: "status",
     label: "출결 상태",
-    render: (row: AttendanceRecord) => (
-      <span className={`font-medium ${STATUS_COLOR[row.status]}`}>
-        {STATUS_LABEL[row.status]}
+    render: (row: Attendance) => (
+      <span
+        className={`font-medium ${STATUS_COLOR[row.status as AttendanceStatus]}`}
+      >
+        {STATUS_LABEL[row.status as AttendanceStatus]}
       </span>
     ),
   },
   {
     key: "memo",
     label: "메모",
-    render: (row: AttendanceRecord) => (
+    render: (row: Attendance) => (
       <span className="text-sm whitespace-nowrap">{row.memo ?? "-"}</span>
     ),
   },
@@ -61,7 +61,7 @@ const ATTENDANCE_TABLE_COLUMNS: AttendanceTableColumn[] = [
 export default function AttendanceDetailTable({
   records,
 }: {
-  records: AttendanceRecord[];
+  records: Attendance[];
 }) {
   return (
     <Table>

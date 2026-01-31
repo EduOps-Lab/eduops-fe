@@ -9,7 +9,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useModal } from "@/providers/ModalProvider";
-import { AttendanceRegisterFormData } from "@/types/students.type";
+import {
+  AttendanceRegisterFormData,
+  AttendanceStatus,
+} from "@/types/students.type";
 import { AttendanceRegisterSchema } from "@/validation/students.validation";
 import {
   getAttendanceRegisterFormDefaults,
@@ -20,6 +23,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useCreateAttendance } from "@/hooks/useEnrollment";
 
 type AttendanceRegisterModalProps = {
   studentId: string;
@@ -29,6 +33,10 @@ export default function AttendanceRegisterModal({
   studentId,
 }: AttendanceRegisterModalProps) {
   const { isOpen, closeModal } = useModal();
+
+  // 개별 수강생 출결 등록
+  const { mutate: createAttendance, isPending } =
+    useCreateAttendance(studentId);
 
   const {
     register,
@@ -46,14 +54,23 @@ export default function AttendanceRegisterModal({
   const status = useWatch({ control, name: "status" });
 
   const onSubmit = (data: AttendanceRegisterFormData) => {
-    const payload = {
-      studentId,
-      ...data,
-    };
-    console.log("출결 등록 데이터:", payload);
-    // TODO: API 호출
-    reset();
-    closeModal();
+    createAttendance(
+      {
+        date: data.date,
+        status: data.status as AttendanceStatus,
+        memo: data.memo,
+      },
+      {
+        onSuccess: () => {
+          reset();
+          console.log("출결 등록 성공:", data);
+          closeModal();
+        },
+        onError: () => {
+          alert("출결 등록에 실패했습니다.");
+        },
+      }
+    );
   };
 
   const handleClose = () => {
@@ -125,9 +142,9 @@ export default function AttendanceRegisterModal({
               <Button
                 className="cursor-pointer"
                 type="submit"
-                disabled={!isValid}
+                disabled={!isValid || isPending}
               >
-                등록
+                {isPending ? "등록 중..." : "등록"}
               </Button>
             </div>
           </div>
