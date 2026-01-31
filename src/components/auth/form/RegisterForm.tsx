@@ -74,7 +74,8 @@ export default function RegisterForm({
       return;
     }
 
-    const phoneNumber = formatPhoneNumber(getValues("phoneNumber")) ?? getValues("phoneNumber");
+    const phoneNumber =
+      formatPhoneNumber(getValues("phoneNumber")) ?? getValues("phoneNumber");
 
     try {
       setPhoneLoading(true);
