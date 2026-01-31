@@ -59,7 +59,7 @@ export function ExistingStudentSelector({
               <div>
                 <p className="font-medium">{student.name}</p>
                 <p className="text-sm text-muted-foreground">
-                  {student.school} · {student.grade}
+                  {student.school} · {student.schoolYear}
                 </p>
               </div>
             </div>
