@@ -14,7 +14,7 @@ import { useAuthStore, useSchoolStore } from "@/stores/auth.store";
 import { REGISTER_FORM_DEFAULTS } from "@/constants/auth.defaults";
 import { verifyPhoneAPI } from "@/services/auth.service";
 import { useAuth } from "@/hooks/useAuth";
-import { formatPhoneNumber } from "@/utils/phone";
+import { phoneNumberFormatter } from "@/utils/phone";
 
 type RegisterFormProps = {
   requireAuthCode?: boolean; // 인증 코드 필요 여부 - 조교
@@ -74,8 +74,7 @@ export default function RegisterForm({
       return;
     }
 
-    const phoneNumber =
-      formatPhoneNumber(getValues("phoneNumber")) ?? getValues("phoneNumber");
+    const phoneNumber = getValues("phoneNumber") ?? getValues("phoneNumber");
 
     try {
       setPhoneLoading(true);
@@ -122,7 +121,7 @@ export default function RegisterForm({
     }
 
     // 전화 번호 하이픈 포맷 적용
-    const formattedPhone = formatPhoneNumber(data.phoneNumber);
+    const formattedPhone = phoneNumberFormatter(data.phoneNumber);
 
     // passwordConfirm 제거
     const baseData = registerRequestSchema.parse({

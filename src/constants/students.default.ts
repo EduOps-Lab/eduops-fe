@@ -22,10 +22,17 @@ export const GRADE_SELECT_OPTIONS = [
 ];
 
 export const STATUS_SETTING_OPTIONS = [
-  { label: "재원", value: "재원" },
-  { label: "휴원", value: "휴원" },
-  { label: "퇴원", value: "퇴원" },
+  { label: "재원", value: "ACTIVE" },
+  { label: "휴원", value: "PAUSED" },
+  { label: "퇴원", value: "DROPPED" },
 ];
+
+// 수강생 상태 매핑 객체(테이블 렌더링용)
+export const STUDENT_STATUS_LABEL = {
+  ACTIVE: "재원",
+  DROPPED: "퇴원",
+  PAUSED: "휴원",
+};
 
 export const STATUS_SELECT_OPTIONS = [
   { label: "전체 상태", value: "all" },
@@ -33,16 +40,16 @@ export const STATUS_SELECT_OPTIONS = [
 ];
 
 export const STUDENTS_TABLE_COLUMNS = [
-  { key: "profile", label: "학생 프로필" },
+  { key: "profile", label: "프로필" },
   { key: "name", label: "학생명" },
   { key: "status", label: "재원상태" },
   { key: "appInstalled", label: "앱 설치" },
-  { key: "class", label: "배정 클래스" },
+  { key: "class", label: "클래스" },
   { key: "school", label: "학교/학년" },
-  { key: "contact", label: "연락처" },
+  { key: "phoneNumber", label: "연락처" },
   { key: "registeredAt", label: "등록일" },
-  { key: "attendance", label: "출결율" },
-  { key: "action", label: "상태" },
+  { key: "attendance", label: "출석현황" },
+  { key: "statusSelect", label: "상태" },
 ];
 
 export const ATTENDANCE_STATUS_OPTIONS = [
