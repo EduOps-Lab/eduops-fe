@@ -34,7 +34,7 @@ export default function AuthenticationCodeForm() {
       return;
     }
 
-    const signupCode = getValues("signupCode");
+    const signupCode = getValues("signupCode").trim();
 
     try {
       setIsLoading(true);
