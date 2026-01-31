@@ -33,11 +33,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // 앱이 처음 로드될 때 세션 정보 가져오기
     const initAuth = async () => {
       try {
-        const { data } = await getSessionAPI();
-        setUser(data.user); // 백엔드에서 준 user 정보 저장
+        const response = await getSessionAPI();
+
+        const userData = response.data?.data?.user;
+
+        if (userData) {
+          setUser(userData);
+        } else {
+          setUser(null);
+        }
       } catch (err: unknown) {
-        console.error(err, "Failed to fetch session");
-        setUser(null); // 세션이 없거나 만료됨
+        console.error("Failed to fetch session", err);
+        setUser(null);
       } finally {
         setIsLoading(false);
       }

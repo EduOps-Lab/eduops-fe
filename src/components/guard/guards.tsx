@@ -22,9 +22,8 @@ export function RouteGuard({
   useEffect(() => {
     if (isLoading) return;
 
-    // 비로그인일 때 로그인 페이지로 리다이렉트
+    // 1. 비로그인 상태일 때
     if (!user) {
-      // allowedRoles[]에 INSTRUCTOR 또는 ASSISTANT가 포함되어 있는지 확인하여 리다이렉트
       const isEducatorPath = allowedRoles.some(
         (r) => r === "INSTRUCTOR" || r === "ASSISTANT"
       );
@@ -32,7 +31,7 @@ export function RouteGuard({
       return;
     }
 
-    // 로그인 했지만 권한이 없으면 리다이렉트
+    // 2. 로그인 상태지만 권한(Role)이 없을 때
     if (!hasAccess) {
       alert("접근 권한이 없습니다.");
       const isUserEducator =
@@ -41,8 +40,13 @@ export function RouteGuard({
     }
   }, [user, isLoading, allowedRoles, router, hasAccess]);
 
+  // 로딩 중일 때는 로딩 표시
   if (isLoading) return <div>로딩 중...</div>;
-  if (!user || !hasAccess) return null;
 
-  return <>{children}</>;
+  // 권한이 확인된 경우에만 자식 컴포넌트 렌더링
+  if (user && hasAccess) {
+    return <>{children}</>;
+  }
+
+  return null;
 }
