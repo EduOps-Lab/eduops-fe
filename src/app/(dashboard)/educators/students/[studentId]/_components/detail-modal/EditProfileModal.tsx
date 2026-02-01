@@ -15,11 +15,17 @@ import { useModal } from "@/providers/ModalProvider";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { EditProfileFormData, StudentEnrollment } from "@/types/students.type";
+import {
+  EditProfileFormData,
+  EditProfileFormDataType,
+} from "@/types/students.type";
 import { editProfileSchema } from "@/validation/students.validation";
+import { useUpdateEnrollment } from "@/hooks/useEnrollment";
+import { EDIT_PROFILE_FORM_DEFAULTS } from "@/constants/students.default";
+import { Textarea } from "@/components/ui/textarea";
 
 type EditProfileModalProps = {
-  studentData: StudentEnrollment;
+  studentData: EditProfileFormDataType;
 };
 
 export default function EditProfileModal({
@@ -27,6 +33,9 @@ export default function EditProfileModal({
 }: EditProfileModalProps) {
   const { isOpen, closeModal } = useModal();
   const [isEditMode, setIsEditMode] = useState(false);
+
+  // 수강생 정보 수정
+  const { mutate: updateStudent, isPending } = useUpdateEnrollment();
 
   const {
     register,
@@ -36,7 +45,7 @@ export default function EditProfileModal({
   } = useForm<EditProfileFormData>({
     resolver: zodResolver(editProfileSchema),
     mode: "onChange",
-    defaultValues: studentData,
+    defaultValues: EDIT_PROFILE_FORM_DEFAULTS,
   });
 
   // 이전 모달 상태 추적
@@ -54,12 +63,6 @@ export default function EditProfileModal({
     setIsEditMode(true);
   };
 
-  const handleClose = () => {
-    reset(studentData); // 변경사항 초기화
-    setIsEditMode(false);
-    closeModal();
-  };
-
   const onSubmit = (data: EditProfileFormData) => {
     // dirtyFields 기준으로 변경된 데이터만 추출
     const changedData = Object.keys(dirtyFields).reduce((acc, key) => {
@@ -70,12 +73,24 @@ export default function EditProfileModal({
 
     if (Object.keys(changedData).length === 0) return;
 
-    console.log("변경된 데이터:", changedData);
+    updateStudent(
+      { id: studentData.id, data: changedData },
+      {
+        onSuccess: () => {
+          console.log("수강생 정보 수정 성공:", changedData);
 
-    // TODO: API 요청
-    // await updateStudentApi(changedData);
+          setIsEditMode(false);
+          closeModal();
+        },
+        onError: () => {
+          alert("수강생 정보 수정에 실패했습니다.");
+        },
+      }
+    );
+  };
 
-    reset(data);
+  const handleClose = () => {
+    reset(studentData); // 변경사항 초기화
     setIsEditMode(false);
     closeModal();
   };
@@ -93,27 +108,27 @@ export default function EditProfileModal({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>학생 정보 수정</DialogTitle>
+          <DialogTitle>학생 정보</DialogTitle>
           <DialogDescription>
             학생 정보를 최신 상태로 유지하세요.
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <div className="space-y-4">
+          <div className="max-h-[70vh] overflow-y-auto pr-2 py-2 space-y-4 custom-scrollbar">
             {/* 학생 정보 */}
             <div className="flex flex-col gap-4 text-xs">
               <div className="space-y-2">
-                <Label htmlFor="name">학생 이름</Label>
+                <Label htmlFor="studentName">학생 이름</Label>
                 <Input
-                  id="name"
+                  id="studentName"
                   className="w-full"
                   disabled={!isEditMode}
-                  {...register("name")}
+                  {...register("studentName")}
                   placeholder="학생 이름"
                 />
-                {errors.name && (
-                  <p className="text-red-500">{errors.name.message}</p>
+                {errors.studentName && (
+                  <p className="text-red-500">{errors.studentName.message}</p>
                 )}
               </div>
 
@@ -146,16 +161,16 @@ export default function EditProfileModal({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phoneNumber">연락처</Label>
+                <Label htmlFor="studentPhone">연락처</Label>
                 <Input
-                  id="phoneNumber"
+                  id="studentPhone"
                   className="w-full"
                   disabled={!isEditMode}
-                  {...register("phoneNumber")}
+                  {...register("studentPhone")}
                   placeholder="연락처"
                 />
-                {errors.phoneNumber && (
-                  <p className="text-red-500">{errors.phoneNumber.message}</p>
+                {errors.studentPhone && (
+                  <p className="text-red-500">{errors.studentPhone.message}</p>
                 )}
               </div>
 
@@ -188,6 +203,17 @@ export default function EditProfileModal({
               </div>
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="memo">메모</Label>
+              <Textarea
+                id="memo"
+                disabled={!isEditMode}
+                {...register("memo")}
+                placeholder="학생 관련 메모를 입력하세요"
+                rows={4}
+              />
+            </div>
+
             <div className="flex gap-2 justify-end">
               <Button
                 className="cursor-pointer"
@@ -210,9 +236,9 @@ export default function EditProfileModal({
                 <Button
                   className="cursor-pointer"
                   type="submit"
-                  disabled={!isValid || !isDirty}
+                  disabled={!isValid || !isDirty || isPending}
                 >
-                  저장
+                  {isPending ? "저장 중..." : "저장"}
                 </Button>
               )}
             </div>

@@ -1,14 +1,19 @@
-// 출결, 로그 등 (2026-01-27T09:12:33.123Z)
-export const getTodayISODate = () => {
-  return new Date().toISOString();
+// 한국 시간 기준으로 날짜 객체 생성
+const getKoreaDate = (date?: string | Date) => {
+  return date ? new Date(date) : new Date();
 };
 
-// 폼 생성일 등 (2026-01-27)
+// "YYYY-MM-DD" 형식으로 반환
 export const getTodayYMD = () => {
-  const today = new Date();
-  const yyyy = today.getFullYear();
-  const mm = String(today.getMonth() + 1).padStart(2, "0");
-  const dd = String(today.getDate()).padStart(2, "0");
+  const d = getKoreaDate();
+  return d.toLocaleDateString("sv-SE", { timeZone: "Asia/Seoul" });
+};
 
-  return `${yyyy}-${mm}-${dd}`;
+// 서버 ISO 날짜 -> 한국 날짜 문자열
+export const formatYMDFromISO = (iso?: string | null) => {
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return null;
+
+  return d.toLocaleDateString("sv-SE", { timeZone: "Asia/Seoul" });
 };

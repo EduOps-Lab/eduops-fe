@@ -4,43 +4,44 @@ import { Checkbox } from "@/components/ui/checkbox";
 import StatusLabel from "@/components/common/label/StatusLabel";
 import SelectBtn from "@/components/common/button/SelectBtn";
 import { STATUS_SETTING_OPTIONS } from "@/constants/students.default";
-import { StudentEnrollment } from "@/types/students.type";
+import { Student, StudentStatus } from "@/types/students.type";
 import noProfileImage from "@/assets/images/no-profile.jpg";
+import { formatYMDFromISO } from "@/utils/date";
+import { ellipsText } from "@/utils/ellipsText";
+import { phoneNumberFormatter } from "@/utils/phone";
 
 export type StudentTableColumn = {
   key: string;
-  render: (row: StudentEnrollment) => React.ReactNode;
+  render: (row: Student) => React.ReactNode;
 };
 
 export const StudentTableData = ({
   selectedStudents,
-  onSelectStudent,
-  onStatusChange,
+  onToggleStudent,
   onNavigate,
+  onStatusChange,
 }: {
   selectedStudents: string[];
-  onSelectStudent: (id: string, checked: boolean) => void;
-  onStatusChange: (id: string, status: string) => void;
+  onToggleStudent: (student: Student) => void;
   onNavigate: (enrollmentId: string) => void;
+  onStatusChange: (id: string, status: StudentStatus) => void;
 }): StudentTableColumn[] => [
   {
     key: "select",
-    render: (row: StudentEnrollment) => (
+    render: (row: Student) => (
       <Checkbox
         className="cursor-pointer"
-        checked={selectedStudents.includes(row.enrollmentId)}
-        onCheckedChange={(checked) =>
-          onSelectStudent(row.enrollmentId, checked as boolean)
-        }
+        checked={selectedStudents.includes(row.id)}
+        onCheckedChange={() => onToggleStudent(row)}
       />
     ),
   },
   {
     key: "profile",
-    render: (row: StudentEnrollment) => (
+    render: (row: Student) => (
       <Image
-        src={row.profileImage || noProfileImage.src}
-        alt={row.name}
+        src={noProfileImage.src}
+        alt={row.studentName}
         width={32}
         height={32}
         className="rounded-full"
@@ -49,48 +50,54 @@ export const StudentTableData = ({
   },
   {
     key: "name",
-    render: (row: StudentEnrollment) => (
+    render: (row: Student) => (
       <span
         className="font-medium whitespace-nowrap text-sm cursor-pointer hover:text-primary hover:underline"
-        onClick={() => onNavigate(row.enrollmentId)}
+        onClick={() => onNavigate(row.id)}
       >
-        {row.name}
+        {row.studentName}
       </span>
     ),
   },
   {
-    key: "enrollment",
-    render: (row: StudentEnrollment) => (
+    key: "status",
+    render: (row: Student) => (
       <StatusLabel
         color={
-          row.status === "재원"
+          row.status === "ACTIVE"
             ? "green"
-            : row.status === "휴원"
+            : row.status === "PAUSED"
               ? "yellow"
               : "red"
         }
       >
-        {row.status}
+        {row.status === "ACTIVE"
+          ? "재원"
+          : row.status === "DROPPED"
+            ? "탈퇴"
+            : "휴원"}
       </StatusLabel>
     ),
   },
   {
-    key: "app",
-    render: (row: StudentEnrollment) => (
+    key: "appInstalled",
+    render: (row: Student) => (
       <span className="text-sm whitespace-nowrap">
-        {row.isAppUser ? "O" : "X"}
+        {row.appStudentId ? "O" : "X"}
       </span>
     ),
   },
   {
-    key: "lecture",
-    render: (row: StudentEnrollment) => (
-      <span className="text-sm whitespace-nowrap">{row.lecture.title}</span>
+    key: "class",
+    render: (row: Student) => (
+      <span className="text-sm whitespace-nowrap">
+        {ellipsText(row.lecture.title)}
+      </span>
     ),
   },
   {
     key: "school",
-    render: (row: StudentEnrollment) => (
+    render: (row: Student) => (
       <span className="text-sm whitespace-nowrap">
         {row.school} / {row.schoolYear}
       </span>
@@ -98,33 +105,38 @@ export const StudentTableData = ({
   },
   {
     key: "phoneNumber",
-    render: (row: StudentEnrollment) => (
-      <span className="text-sm whitespace-nowrap">{row.phoneNumber}</span>
+    render: (row: Student) => (
+      <span className="text-sm whitespace-nowrap">
+        {phoneNumberFormatter(row.studentPhone)}
+      </span>
     ),
   },
   {
     key: "registeredAt",
-    render: (row: StudentEnrollment) => (
-      <span className="text-sm whitespace-nowrap">{row.registeredAt}</span>
+    render: (row: Student) => (
+      <span className="text-sm whitespace-nowrap">
+        {row.registeredAt ? formatYMDFromISO(row.registeredAt) : "-"}
+      </span>
     ),
   },
   {
+    // TODO: 출결율 데이터 없음!
     key: "attendance",
-    render: (row: StudentEnrollment) => (
+    render: (row: Student) => (
       <span className="text-sm whitespace-nowrap">
-        {row.attendance.percentage}%
+        {row.attendanceRate != null ? `${row.attendanceRate}%` : "-"}
       </span>
     ),
   },
   {
     key: "statusSelect",
-    render: (row: StudentEnrollment) => (
+    render: (row: Student) => (
       <SelectBtn
         className="w-[100px]"
         value={row.status}
         placeholder="상태 선택"
         options={STATUS_SETTING_OPTIONS}
-        onChange={(value) => onStatusChange(row.enrollmentId, value)}
+        onChange={(value) => onStatusChange(row.id, value as StudentStatus)}
       />
     ),
   },
