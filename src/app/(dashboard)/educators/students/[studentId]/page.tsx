@@ -34,10 +34,12 @@ export default function StudentDetailPage() {
 
   // 학생 상세 데이터 조회
   const {
-    data: studentData,
+    data: enrollment,
     isPending,
     isError,
   } = useEnrollmentDetail(studentId);
+
+  // const lectureData = enrollment?.lecture;
 
   // 학생 출결 통계 조회
   const {
@@ -55,7 +57,7 @@ export default function StudentDetailPage() {
       </div>
     );
   }
-  if (isError || isAttendanceError || !studentData) {
+  if (isError || isAttendanceError || !enrollment) {
     return (
       <EmptyState
         message="학생 정보를 불러올 수 없습니다."
@@ -91,7 +93,7 @@ export default function StudentDetailPage() {
               {/* 프로필 이미지 */}
               <div className="shrink-0">
                 <Image
-                  src={studentData.profileImage || noProfile}
+                  src={enrollment.profileImage || noProfile}
                   alt={"학생 프로필 이미지"}
                   width={120}
                   height={120}
@@ -103,9 +105,9 @@ export default function StudentDetailPage() {
               <div className="flex-1 space-y-3">
                 <div className="flex flex-col">
                   <h2 className="text-2xl font-bold flex items-center gap-1">
-                    {studentData.studentName}
+                    {enrollment.studentName}
                     <span className="text-sm text-muted-foreground">
-                      {studentData.appStudentId ? (
+                      {enrollment.appStudentId ? (
                         <StatusLabel color="green">앱 사용자</StatusLabel>
                       ) : (
                         <StatusLabel color="red">미등록</StatusLabel>
@@ -114,33 +116,33 @@ export default function StudentDetailPage() {
                     {/* TODO: 상태, 컬러 매핑 객체 만들어 사용 */}
                     <StatusLabel
                       color={
-                        studentData.status === "ACTIVE"
+                        enrollment.status === "ACTIVE"
                           ? "green"
-                          : studentData.status === "PAUSED"
+                          : enrollment.status === "PAUSED"
                             ? "yellow"
                             : "red"
                       }
                     >
-                      {studentData.status === "ACTIVE"
+                      {enrollment.status === "ACTIVE"
                         ? "재원"
-                        : studentData.status === "DROPPED"
+                        : enrollment.status === "DROPPED"
                           ? "탈퇴"
                           : "휴원"}
                     </StatusLabel>
                   </h2>
                   <p className="text-sm text-muted-foreground mt-1">
-                    🎓 학교 | {studentData.school} · {studentData.schoolYear}
+                    🎓 학교 | {enrollment.school} · {enrollment.schoolYear}
                   </p>
                   <p className="text-sm text-muted-foreground">
                     📱 연락처 |{" "}
-                    {phoneNumberFormatter(studentData.studentPhone || "")}
+                    {phoneNumberFormatter(enrollment.studentPhone || "")}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    ✉️ 이메일 | {studentData.email || "-"}
+                    ✉️ 이메일 | {enrollment.email || "-"}
                   </p>
                   <p className="text-sm text-muted-foreground">
                     👨‍👩‍👦 학부모 |{" "}
-                    {phoneNumberFormatter(studentData.parentPhone || "")}
+                    {phoneNumberFormatter(enrollment.parentPhone || "")}
                   </p>
                 </div>
               </div>
@@ -152,7 +154,7 @@ export default function StudentDetailPage() {
                 onClick={() =>
                   openModal(
                     <EditProfileModal
-                      studentData={studentData as EditProfileFormDataType}
+                      studentData={enrollment as EditProfileFormDataType}
                     />
                   )
                 }
@@ -163,7 +165,7 @@ export default function StudentDetailPage() {
                 className="cursor-pointer"
                 variant="outline"
                 onClick={() =>
-                  openModal(<AttendanceDetailModal studentData={studentData} />)
+                  openModal(<AttendanceDetailModal studentData={enrollment} />)
                 }
               >
                 출결 상세
@@ -215,7 +217,7 @@ export default function StudentDetailPage() {
         <div className="flex items-center justify-between">
           <h3 className="text-xl font-semibold">수강 중인 수업</h3>
           <span className="text-sm text-muted-foreground">
-            총 {enrolledLectures.length}개
+            {/* TODO: 수강 중인 수업이 단일 객체로 내려옴... */}총 ?개
           </span>
         </div>
 

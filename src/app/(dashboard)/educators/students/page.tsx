@@ -194,7 +194,7 @@ export default function StudentsListPage() {
     <div className="container mx-auto px-8 py-8 space-y-6 max-w-[1200px]">
       <Title
         title="전체 학생 관리"
-        description={`총 ${students.length}명의 학생 정보를 관리하고 있습니다.`}
+        description={`총 ${pagination.totalCount}명의 학생 정보를 관리하고 있습니다.`}
       />
 
       {/* 모달 버튼 */}
