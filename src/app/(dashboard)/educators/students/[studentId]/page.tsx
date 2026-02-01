@@ -19,9 +19,9 @@ import { phoneNumberFormatter } from "@/utils/phone";
 import StatusLabel from "@/components/common/label/StatusLabel";
 import { EditProfileFormDataType } from "@/types/students.type";
 
-import EditProfileModal from "../_components/detail-modal/EditProfileModal";
-import AttendanceDetailModal from "../_components/detail-modal/AttendanceDetailModal";
-import AttendanceRegisterModal from "../_components/detail-modal/AttendanceRegisterModal";
+import EditProfileModal from "./_components/detail-modal/EditProfileModal";
+import AttendanceDetailModal from "./_components/detail-modal/AttendanceDetailModal";
+import AttendanceRegisterModal from "./_components/detail-modal/AttendanceRegisterModal";
 
 export default function StudentDetailPage() {
   const params = useParams();
@@ -102,15 +102,31 @@ export default function StudentDetailPage() {
               {/* 학생 정보 */}
               <div className="flex-1 space-y-3">
                 <div className="flex flex-col">
-                  <h2 className="text-2xl font-bold flex items-center gap-2">
+                  <h2 className="text-2xl font-bold flex items-center gap-1">
                     {studentData.studentName}
-                    <span className="text-sm text-muted-foreground ml-2">
+                    <span className="text-sm text-muted-foreground">
                       {studentData.appStudentId ? (
                         <StatusLabel color="green">앱 사용자</StatusLabel>
                       ) : (
                         <StatusLabel color="red">미등록</StatusLabel>
                       )}
                     </span>
+                    {/* TODO: 상태, 컬러 매핑 객체 만들어 사용 */}
+                    <StatusLabel
+                      color={
+                        studentData.status === "ACTIVE"
+                          ? "green"
+                          : studentData.status === "PAUSED"
+                            ? "yellow"
+                            : "red"
+                      }
+                    >
+                      {studentData.status === "ACTIVE"
+                        ? "재원"
+                        : studentData.status === "DROPPED"
+                          ? "탈퇴"
+                          : "휴원"}
+                    </StatusLabel>
                   </h2>
                   <p className="text-sm text-muted-foreground mt-1">
                     🎓 학교 | {studentData.school} · {studentData.schoolYear}

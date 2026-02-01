@@ -23,7 +23,6 @@ export type AttendanceRegisterFormData = z.infer<
 
 export type EditProfileFormDataType = EditProfileFormData & {
   id: string;
-  memo?: string | null;
 };
 
 // 서버 응답 공통 포맷

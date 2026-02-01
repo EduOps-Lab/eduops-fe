@@ -77,26 +77,28 @@ export function StudentCreateModal() {
                 </Label>
                 <Input
                   id="studentName"
-                  {...register("name")}
+                  {...register("studentName")}
                   placeholder="홍길동"
                 />
-                {errors.name && (
-                  <p className="text-xs text-red-500">{errors.name.message}</p>
+                {errors.studentName && (
+                  <p className="text-xs text-red-500">
+                    {errors.studentName.message}
+                  </p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phoneNumber">
+                <Label htmlFor="studentPhone">
                   연락처 <span className="text-red-500">*</span>
                 </Label>
                 <Input
-                  id="phoneNumber"
-                  {...register("phoneNumber")}
+                  id="studentPhone"
+                  {...register("studentPhone")}
                   placeholder="010-1234-5678"
                 />
-                {errors.phoneNumber && (
+                {errors.studentPhone && (
                   <p className="text-xs text-red-500">
-                    {errors.phoneNumber.message}
+                    {errors.studentPhone.message}
                   </p>
                 )}
               </div>
