@@ -70,7 +70,14 @@ export default function StudentsListPage() {
   // 수강생 목록 조회
   const { data, isPending, isError } = useEnrollmentList(query);
   const students = data?.items || [];
-  const pagination = data?.pagination || {};
+  const pagination: PaginationType = data?.pagination ?? {
+    totalCount: 0,
+    totalPage: 1,
+    currentPage: 1,
+    limit: 10,
+    hasNextPage: false,
+    hasPrevPage: false,
+  };
 
   // 수강생 정보 업데이트
   const { mutate: updateStatus } = useUpdateEnrollment();
@@ -298,7 +305,7 @@ export default function StudentsListPage() {
       </div>
 
       {/* 테이블 */}
-      <div className="border rounded-lg overflow-x-auto">
+      <div className="border rounded-lg overflow-x-auto min-h-[580px]">
         <Table>
           <TableHeader>
             <TableRow>

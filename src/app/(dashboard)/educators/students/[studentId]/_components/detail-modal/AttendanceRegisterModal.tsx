@@ -63,10 +63,10 @@ export default function AttendanceRegisterModal({
       {
         onSuccess: () => {
           reset();
-          console.log("출결 등록 성공:", data);
           closeModal();
         },
-        onError: () => {
+        onError: (error) => {
+          console.error("출결 등록 실패:", error);
           alert("출결 등록에 실패했습니다.");
         },
       }

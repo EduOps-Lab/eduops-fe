@@ -115,7 +115,7 @@ export const StudentTableData = ({
     key: "registeredAt",
     render: (row: Student) => (
       <span className="text-sm whitespace-nowrap">
-        {formatYMDFromISO(row.registeredAt ?? "-")}
+        {row.registeredAt ? formatYMDFromISO(row.registeredAt) : "-"}
       </span>
     ),
   },
@@ -124,7 +124,7 @@ export const StudentTableData = ({
     key: "attendance",
     render: (row: Student) => (
       <span className="text-sm whitespace-nowrap">
-        {`${row.attendanceRate ?? "-"}%`}
+        {row.attendanceRate != null ? `${row.attendanceRate}%` : "-"}
       </span>
     ),
   },
