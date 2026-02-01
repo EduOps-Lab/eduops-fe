@@ -35,7 +35,7 @@ const ATTENDANCE_TABLE_COLUMNS: AttendanceTableColumn[] = [
     key: "date",
     label: "수업 일자",
     render: (row: Attendance) => (
-      <span className="text-sm whitespace-nowrap">{row.date}</span>
+      <span className="text-sm whitespace-nowrap">{row.date || "-"}</span>
     ),
   },
   {

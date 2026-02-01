@@ -22,6 +22,7 @@ import {
 import { editProfileSchema } from "@/validation/students.validation";
 import { useUpdateEnrollment } from "@/hooks/useEnrollment";
 import { EDIT_PROFILE_FORM_DEFAULTS } from "@/constants/students.default";
+import { Textarea } from "@/components/ui/textarea";
 
 type EditProfileModalProps = {
   studentData: EditProfileFormDataType;
@@ -107,14 +108,14 @@ export default function EditProfileModal({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>학생 정보 수정</DialogTitle>
+          <DialogTitle>학생 정보</DialogTitle>
           <DialogDescription>
             학생 정보를 최신 상태로 유지하세요.
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <div className="space-y-4">
+          <div className="max-h-[70vh] overflow-y-auto pr-2 py-2 space-y-4 custom-scrollbar">
             {/* 학생 정보 */}
             <div className="flex flex-col gap-4 text-xs">
               <div className="space-y-2">
@@ -200,6 +201,17 @@ export default function EditProfileModal({
                   <p className="text-red-500">{errors.parentPhone.message}</p>
                 )}
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="memo">메모</Label>
+              <Textarea
+                id="memo"
+                disabled={!isEditMode}
+                {...register("memo")}
+                placeholder="학생 관련 메모를 입력하세요"
+                rows={4}
+              />
             </div>
 
             <div className="flex gap-2 justify-end">
