@@ -1,28 +1,19 @@
-const KST_OFFSET = 9 * 60 * 60 * 1000;
-
-// UTC -> KST
+// 한국 시간 기준으로 날짜 객체 생성
 const getKoreaDate = (date?: string | Date) => {
-  const d = date ? new Date(date) : new Date();
-  return new Date(d.getTime() + KST_OFFSET);
+  return date ? new Date(date) : new Date();
 };
 
-// 화면에 오늘 날짜 표시
+// "YYYY-MM-DD" 형식으로 반환
 export const getTodayYMD = () => {
   const d = getKoreaDate();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
-    d.getDate()
-  ).padStart(2, "0")}`;
+  return d.toLocaleDateString("sv-SE", { timeZone: "Asia/Seoul" });
 };
 
-// 서버 날짜 -> 한국 날짜
+// 서버 ISO 날짜 -> 한국 날짜 문자열
 export const formatYMDFromISO = (iso?: string | null) => {
   if (!iso) return null;
-
   const d = new Date(iso);
   if (isNaN(d.getTime())) return null;
 
-  const kst = getKoreaDate(d);
-  return `${kst.getFullYear()}-${String(kst.getMonth() + 1).padStart(2, "0")}-${String(
-    kst.getDate()
-  ).padStart(2, "0")}`;
+  return d.toLocaleDateString("sv-SE", { timeZone: "Asia/Seoul" });
 };

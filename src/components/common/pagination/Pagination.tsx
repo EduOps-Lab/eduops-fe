@@ -18,11 +18,21 @@ export function Pagination({ pagination, onPageChange }: PaginationProps) {
     hasPrevPage,
   } = pagination;
 
+  const PAGE_GROUP_SIZE = 5;
+
   const hasData = totalCount > 0;
 
   const startIndex = hasData ? (currentPage - 1) * limit + 1 : 0;
+  const endIndex = hasData ? Math.min(currentPage * limit, totalCount) : 0;
 
-  const endIndex = hasData ? startIndex + currentPage - 1 : 0;
+  const currentGroup = Math.ceil(currentPage / PAGE_GROUP_SIZE);
+  const startPage = (currentGroup - 1) * PAGE_GROUP_SIZE + 1;
+  const endPage = Math.min(startPage + PAGE_GROUP_SIZE - 1, totalPage);
+
+  const pageNumbers = Array.from(
+    { length: endPage - startPage + 1 },
+    (_, i) => startPage + i
+  );
 
   return (
     <div className="mt-6 flex items-center justify-between">
@@ -39,18 +49,16 @@ export function Pagination({ pagination, onPageChange }: PaginationProps) {
           이전
         </Button>
 
-        {Array.from({ length: totalPage }).map((_, idx) => {
-          const page = idx + 1;
-          return (
-            <Button
-              key={page}
-              variant={page === currentPage ? "default" : "outline"}
-              onClick={() => onPageChange(page)}
-            >
-              {page}
-            </Button>
-          );
-        })}
+        {pageNumbers.map((page) => (
+          <Button
+            key={page}
+            variant={page === currentPage ? "default" : "outline"}
+            className="w-9"
+            onClick={() => onPageChange(page)}
+          >
+            {page}
+          </Button>
+        ))}
 
         <Button
           variant="outline"
